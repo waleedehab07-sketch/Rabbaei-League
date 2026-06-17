@@ -16,66 +16,104 @@
             --glass-border: rgba(255, 255, 255, 0.08);
             --hover-bg: rgba(255, 255, 255, 0.08);
             --accent-color: #38bdf8;
+            --gold: #fbbf24;
         }
 
-        /* 🔧 تم إزالة الـ flex من هنا لمنع انكماش المربع أثناء التحميل */
         body {
             margin: 0; min-height: 100vh;
             background: radial-gradient(circle at top right, #1a233a, var(--bg-color));
             font-family: 'Cairo', sans-serif; color: #e2e8f0;
             padding: 2rem;
+            display: flex; justify-content: center; align-items: flex-start;
         }
 
         /* 🔧 تثبيت عرض المربع وطوله ليكون فخم من أول ثانية */
         .leaderboard-container {
             width: 100%; max-width: 1200px;
-            margin: 0 auto; /* لتوسيط المربع في منتصف الشاشة دائماً */
-            background: var(--glass-bg); backdrop-filter: blur(16px);
+            background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border); border-radius: 24px;
             padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-            min-height: 75vh; 
+            min-height: 80vh; 
             display: flex; flex-direction: column;
         }
 
+        /* تنسيق زر العودة ليكون أنيق ومتحرك */
         .back-btn {
-            align-self: flex-start; /* ليبقى الزر على اليمين */
-            background: rgba(255, 255, 255, 0.05); color: #fff;
-            padding: 10px 20px; border-radius: 12px; text-decoration: none; font-weight: bold;
-            transition: all 0.3s ease; margin-bottom: 2rem; border: 1px solid var(--glass-border);
+            align-self: flex-start;
+            background: rgba(56, 189, 248, 0.1); color: var(--accent-color);
+            padding: 8px 18px; border-radius: 12px; text-decoration: none; font-weight: 900;
+            transition: all 0.3s ease; margin-bottom: 2rem; border: 1px solid var(--accent-color);
+            display: flex; align-items: center; gap: 8px;
         }
-        .back-btn:hover { background: var(--hover-bg); color: var(--accent-color); }
+        .back-btn:hover { background: var(--accent-color); color: #0b0f19; transform: translateX(5px); }
 
-        .header-title { color: #fbbf24; font-weight: 900; font-size: 2rem; margin-bottom: 0.5rem; text-align: center; }
+        .header-title { color: var(--gold); font-weight: 900; font-size: 2rem; margin-bottom: 0.5rem; text-align: center; text-shadow: 0 0 15px rgba(251, 191, 36, 0.2); }
         .header-subtitle { text-align: center; color: #94a3b8; font-size: 1.1rem; margin-bottom: 2rem; }
 
-        /* 🔧 توسيط رسالة التحميل بمنتصف المربع الكبير */
+        /* 🔧 توسيط رسالة التحميل وإضافة تأثير نبض (Pulse) */
         #loading-msg {
             text-align: center; color: var(--accent-color); font-size: 1.3rem; font-weight: bold;
-            margin: auto 0; padding: 2rem;
+            margin: auto 0; padding: 2rem; animation: pulse 1.5s infinite alternate;
         }
+        @keyframes pulse { from { opacity: 0.5; } to { opacity: 1; text-shadow: 0 0 15px rgba(56, 189, 248, 0.5); } }
 
+        /* 🎨 تصميم إبداعي للفلتر (أزرار المدربين كبسولات ذكية) */
         .filters-box {
-            display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 2rem;
+            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 2rem;
         }
 
         .manager-checkbox-label {
-            display: inline-flex; align-items: center; gap: 6px; color: #cbd5e1; 
-            font-size: 0.85rem; background: rgba(255,255,255,0.04); padding: 8px 16px; 
-            border-radius: 10px; cursor: pointer; transition: 0.2s ease;
-            border: 1px solid var(--glass-border);
+            display: inline-flex; align-items: center; justify-content: center;
+            color: #94a3b8; font-size: 0.95rem; font-weight: bold;
+            background: rgba(0, 0, 0, 0.4); padding: 8px 18px; 
+            border-radius: 50px; cursor: pointer; transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            user-select: none;
         }
-        .manager-checkbox-label.active { border-color: var(--accent-color); background: rgba(56, 189, 248, 0.1); }
+        
+        .manager-checkbox-label:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
 
+        /* السحر البرمجي: تغيير لون الكبسولة بالكامل إذا كان التشيك بوكس الداخلي مفعل */
+        .manager-checkbox-label:has(input:checked) {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: var(--accent-color);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* إخفاء مربع التشيك بوكس التقليدي */
+        .manager-checkbox-label input[type="checkbox"] { display: none; }
+
+        /* تصميم شاشة الرسم البياني (شاشة مجوفة للداخل) */
         .canvas-container {
             position: relative; height: 500px; width: 100%; flex-grow: 1;
-            background: rgba(0, 0, 0, 0.2); border-radius: 16px; padding: 1rem;
+            background: rgba(0, 0, 0, 0.3); border-radius: 20px; padding: 1.5rem;
+            border: 1px solid var(--glass-border);
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.6); /* ظل داخلي يعطي عمق */
         }
 
+        /* =========================================
+           تنسيقات الجوال الاحترافية
+           ========================================= */
         @media (max-width: 768px) {
-            body { padding: 1rem; }
-            .leaderboard-container { padding: 1.5rem 1rem; }
-            .canvas-container { height: 400px; }
-            .header-title { font-size: 1.5rem; }
+            body { padding: 0.5rem; align-items: stretch; }
+            .leaderboard-container { padding: 1.5rem 1rem; border-radius: 16px; margin-top: 10px; min-height: 85vh; }
+            
+            .back-btn { font-size: 0.9rem; padding: 6px 14px; margin-bottom: 1.5rem; }
+            .header-title { font-size: 1.4rem; }
+            .header-subtitle { font-size: 0.9rem; margin-bottom: 1.5rem; }
+            
+            /* ترتيب كبسولات الفلاتر في الجوال عشان تاخذ مساحة أنيقة */
+            .filters-box { gap: 8px; margin-bottom: 1.5rem; }
+            .manager-checkbox-label { padding: 6px 14px; font-size: 0.85rem; }
+            
+            /* تصغير مساحة الرسم البياني وتوسيع هوامشه ليتناسب مع الجوال */
+            .canvas-container { 
+                height: 400px; 
+                padding: 0.8rem;
+                border-radius: 16px;
+            }
         }
     </style>
 </head>
