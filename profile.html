@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ملف المدرب | دوري رباعي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --hover-bg: rgba(255, 255, 255, 0.08);
+        }
+        body {
+            margin: 0; min-height: 100vh;
+            background: radial-gradient(circle at top right, #1a233a, var(--bg-color));
+            font-family: 'Cairo', sans-serif; color: #e2e8f0;
+            display: flex; justify-content: center; align-items: flex-start; padding: 2rem;
+        }
+        .profile-card {
+            width: 100%; max-width: 900px; margin-top: 2rem;
+            background: var(--glass-bg); backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border); border-radius: 24px;
+            padding: 3rem; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+        }
+        .back-btn {
+            display: inline-block; margin-bottom: 2rem;
+            color: #38bdf8; text-decoration: none; font-weight: 700;
+            border: 1px solid #38bdf8; padding: 8px 16px; border-radius: 8px; transition: 0.3s;
+        }
+        .back-btn:hover { background: #38bdf8; color: #0b0f19; transform: translateX(5px); }
+        
+        .coach-icon { font-size: 5rem; margin-bottom: 1rem; }
+        .coach-name { font-size: 2.5rem; font-weight: 900; margin: 0; color: #fff; }
+        
+        .medals-box {
+            display: flex; justify-content: space-around;
+            background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 16px; margin-top: 2rem;
+        }
+        .medal-item { display: flex; flex-direction: column; font-size: 1.2rem; font-weight: 700; }
+        .medal-item span { font-size: 2.5rem; margin-bottom: 8px; }
+
+        /* 🏆 القسم الجديد: السجل التاريخي (بدون تمرير داخلي) */
+        .history-section {
+            margin-top: 3.5rem;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 2.5rem;
+        }
+        .history-section h3 {
+            color: #fbbf24; text-align: center; font-weight: 900; font-size: 1.5rem; margin-bottom: 2rem;
+        }
+
+        /* شبكة البطاقات (Grid System) */
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            text-align: right;
+        }
+
+        /* تصميم بطاقة الموسم */
+        .season-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .season-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(56, 189, 248, 0.3);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        /* عنوان الموسم داخل البطاقة */
+        .season-header {
+            color: #38bdf8;
+            font-size: 1.3rem;
+            font-weight: 900;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 0.8rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* سطر البطولة داخل بطاقة الموسم */
+        .t-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.05);
+        }
+        .t-item:last-child { border-bottom: none; padding-bottom: 0; }
+        
+        .t-name { font-weight: 700; color: #fff; font-size: 1.05rem; }
+        .t-stats { display: flex; gap: 1rem; align-items: center; }
+        .t-points { 
+            color: #e2e8f0; font-weight: bold; font-size: 0.9rem; 
+            background: rgba(255, 255, 255, 0.05); padding: 4px 10px; border-radius: 6px; 
+        }
+        .t-rank-badge { font-size: 1.1rem; font-weight: 900; }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .profile-card { padding: 1.5rem; }
+            .history-grid { grid-template-columns: 1fr; } /* بطاقة واحدة في كل سطر على الجوال */
+            .medal-item span { font-size: 2rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="profile-card" id="profile-content">
+        <h3 style="color:#38bdf8; text-align:center;">جاري جلب بيانات المدرب من قاعدة البيانات... ⏱️</h3>
+    </div>
+
+    <script type="module" src="/src/profile.ts"></script>
+</body>
+</html>

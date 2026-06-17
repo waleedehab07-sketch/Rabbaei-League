@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دوري رباعي | المنصة الرسمية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --gold: #FFD700;
+            --silver: #E3E4E5;
+            --bronze: #CD7F32;
+            --bg-color: #0b0f19;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --hover-bg: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at top right, #1a233a, var(--bg-color));
+            font-family: 'Cairo', sans-serif;
+            color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+        }
+
+        .leaderboard-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+        }
+
+        .header { text-align: center; margin-bottom: 2rem; }
+        .logo-link { display: inline-block; text-decoration: none !important; border: none !important; outline: none !important; }
+        .league-logo {
+            max-width: 250px; height: auto; margin: 0 auto 1.5rem; display: block;
+            transition: transform 0.3s ease; filter: brightness(0) invert(1) drop-shadow(0 0 15px rgba(255, 215, 0, 0.4));
+        }
+        .league-logo:hover { transform: scale(1.05) rotate(2deg); }
+        .header p { color: #94a3b8; font-size: 1.1rem; margin-top: 0.5rem; letter-spacing: 1px; }
+
+        .official-note {
+            background: rgba(56, 189, 248, 0.05); border: 1px solid rgba(56, 189, 248, 0.15);
+            border-right: 4px solid #38bdf8; padding: 1.2rem 1.5rem; border-radius: 12px;
+            margin-bottom: 2.5rem; color: #cbd5e1; font-size: 0.95rem; line-height: 1.7; text-align: justify;
+        }
+        .official-note span { color: #38bdf8; font-weight: 700; }
+
+        /* تنسيق الحاوية التي تجمع العنوان وزر الرسم البياني */
+        .section-header-container {
+            display: flex; justify-content: space-between; align-items: center; 
+            margin: 2rem 0 1rem 0; border-right: 4px solid #fbbf24; padding-right: 12px;
+        }
+        .section-title { color: #fbbf24; font-weight: 900; font-size: 1.6rem; }
+
+        table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-bottom: 3rem; }
+        th { text-align: right; padding: 1rem 1.5rem; color: #64748b; font-size: 0.9rem; letter-spacing: 1px; }
+        td { padding: 1.2rem 1.5rem; background: rgba(255, 255, 255, 0.02); transition: all 0.3s ease; }
+        tr td:first-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+        tr td:last-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+
+        .leaderboard-table tbody tr { cursor: pointer; transition: transform 0.3s ease; }
+        .leaderboard-table tbody tr:hover td { background: var(--hover-bg); }
+        .leaderboard-table tbody tr:hover { transform: scale(1.01) translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); }
+
+        .rank { font-weight: 900; font-size: 1.2rem; color: #cbd5e1; }
+        .coach-name { font-weight: 700; font-size: 1.2rem; }
+        .score { font-weight: 900; font-size: 1.3rem; color: #38bdf8; text-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
+        .medals span { font-size: 1.1rem; margin-left: 8px; }
+
+        .rank-1 td { background: linear-gradient(90deg, rgba(255, 215, 0, 0.08), rgba(255, 215, 0, 0.01)); border-right: 4px solid var(--gold); }
+        .rank-2 td { background: linear-gradient(90deg, rgba(227, 228, 229, 0.08), rgba(227, 228, 229, 0.01)); border-right: 4px solid var(--silver); }
+        .rank-3 td { background: linear-gradient(90deg, rgba(205, 127, 50, 0.08), rgba(205, 127, 50, 0.01)); border-right: 4px solid var(--bronze); }
+        
+        .rank-1 .rank { color: var(--gold); text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+        .rank-2 .rank { color: var(--silver); text-shadow: 0 0 10px rgba(227, 228, 229, 0.5); }
+        .rank-3 .rank { color: var(--bronze); text-shadow: 0 0 10px rgba(205, 127, 50, 0.5); }
+
+        .tabs-header { display: flex; gap: 12px; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap; }
+        .tab-btn {
+            background: var(--glass-bg); border: 1px solid var(--glass-border); color: #94a3b8;
+            padding: 10px 24px; border-radius: 12px; cursor: pointer; font-family: inherit;
+            font-weight: 900; font-size: 1.1rem; transition: all 0.3s ease; backdrop-filter: blur(10px);
+        }
+        .tab-btn:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+        .tab-btn.active {
+            background: rgba(56, 189, 248, 0.15); border-color: #38bdf8; color: #fff;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); transform: scale(1.05);
+        }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeInTab 0.4s ease forwards; }
+        @keyframes fadeInTab { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tournaments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .tournament-box {
+            background: rgba(0, 0, 0, 0.15); border: 1px solid var(--glass-border);
+            border-radius: 16px; padding: 1.2rem; height: fit-content;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .tournament-box:hover { border-color: rgba(255, 255, 255, 0.15); transform: translateY(-3px); }
+        .tournament-title {
+            color: #38bdf8; font-size: 1.2rem; font-weight: 900; text-align: right;
+            margin-bottom: 1rem; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 0.8rem;
+        }
+
+        .tournament-box table { margin-bottom: 0; border-spacing: 0 6px; }
+        .tournament-box th, .tournament-box td { padding: 0.8rem; font-size: 0.95rem; }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .leaderboard-container { padding: 1.5rem 1rem; }
+            .league-logo { max-width: 180px; }
+            .tournaments-grid { grid-template-columns: 1fr; }
+            .section-header-container { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="leaderboard-container">
+        <div class="header">
+            <a href="/" class="logo-link"><img src="./logo_transparent.png" alt="شعار دوري رباعي" class="league-logo" id="logo"></a>
+            <p>ترتيب المدربين التاريخي وأرشيف المواسم</p>
+        </div>
+
+        <div class="official-note">
+            <span>ملاحظة:</span> يزداد ترتيب المدرب بمجرد المشاركة في البطولات وتختلف الزيادة بحسب مركزه في البطولة. وهذا الترتيب هو الترتيب الرسمي المعترف به من دوري رباعي ويتم تحديثه موسمياً.
+        </div>
+
+        <div class="section-header-container">
+            <div class="section-title">🏅 ترتيب أفضل المدربين عبر التاريخ</div>
+            
+            <a href="/chart.html" style="background: rgba(251, 191, 36, 0.1); border: 1px solid #fbbf24; color: #fbbf24; border-radius: 12px; padding: 8px 18px; font-weight: 900; font-size: 0.95rem; cursor: pointer; font-family: inherit; transition: all 0.3s ease; display: flex; align-items: center; gap: 6px; text-decoration: none;"
+               onmouseover="this.style.background='#fbbf24'; this.style.color='#000';" 
+               onmouseout="this.style.background='rgba(251, 191, 36, 0.1)'; this.style.color='#fbbf24';">
+                📊 مسار الـ Score التاريخي
+            </a>
+        </div>
+
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>المركز</th>
+                    <th>المدرب</th>
+                    <th>Score</th>
+                    <th>الميداليات والجوائز</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboard-body">
+                <tr><td colspan="4" style="text-align:center; color:#38bdf8; padding: 2rem;">جاري التحميل... ⏱️</td></tr>
+            </tbody>
+        </table>
+
+        <div class="section-title" style="border-right-color: #38bdf8; color: #38bdf8;">أرشيف البطولات حسب المواسم</div>
+        
+        <div class="official-note" style="background: rgba(245, 158, 11, 0.03); border: 1px solid rgba(245, 158, 11, 0.15); border-right: 4px solid #f59e0b; margin-bottom: 2rem;">
+            <span>ملاحظة:</span> علامة ” – ” تعني أن البيانات مفقودة أو أن البيانات غير موجودة أصلاً في الأرشيف التاريخي للبطولة.
+        </div>
+
+        <div id="tournaments-container">
+            <div style="text-align:center; color:#94a3b8; padding: 2rem;">جاري جلب البطولات وتوزيعها... ⏱️</div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

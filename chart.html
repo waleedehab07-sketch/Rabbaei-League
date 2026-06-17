@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المسار التاريخي للـ Score | دوري رباعي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        
+        :root {
+            --bg-color: #0b0f19;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --hover-bg: rgba(255, 255, 255, 0.08);
+            --accent-color: #38bdf8;
+        }
+
+        /* 🔧 تم إزالة الـ flex من هنا لمنع انكماش المربع أثناء التحميل */
+        body {
+            margin: 0; min-height: 100vh;
+            background: radial-gradient(circle at top right, #1a233a, var(--bg-color));
+            font-family: 'Cairo', sans-serif; color: #e2e8f0;
+            padding: 2rem;
+        }
+
+        /* 🔧 تثبيت عرض المربع وطوله ليكون فخم من أول ثانية */
+        .leaderboard-container {
+            width: 100%; max-width: 1200px;
+            margin: 0 auto; /* لتوسيط المربع في منتصف الشاشة دائماً */
+            background: var(--glass-bg); backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border); border-radius: 24px;
+            padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            min-height: 75vh; 
+            display: flex; flex-direction: column;
+        }
+
+        .back-btn {
+            align-self: flex-start; /* ليبقى الزر على اليمين */
+            background: rgba(255, 255, 255, 0.05); color: #fff;
+            padding: 10px 20px; border-radius: 12px; text-decoration: none; font-weight: bold;
+            transition: all 0.3s ease; margin-bottom: 2rem; border: 1px solid var(--glass-border);
+        }
+        .back-btn:hover { background: var(--hover-bg); color: var(--accent-color); }
+
+        .header-title { color: #fbbf24; font-weight: 900; font-size: 2rem; margin-bottom: 0.5rem; text-align: center; }
+        .header-subtitle { text-align: center; color: #94a3b8; font-size: 1.1rem; margin-bottom: 2rem; }
+
+        /* 🔧 توسيط رسالة التحميل بمنتصف المربع الكبير */
+        #loading-msg {
+            text-align: center; color: var(--accent-color); font-size: 1.3rem; font-weight: bold;
+            margin: auto 0; padding: 2rem;
+        }
+
+        .filters-box {
+            display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 2rem;
+        }
+
+        .manager-checkbox-label {
+            display: inline-flex; align-items: center; gap: 6px; color: #cbd5e1; 
+            font-size: 0.85rem; background: rgba(255,255,255,0.04); padding: 8px 16px; 
+            border-radius: 10px; cursor: pointer; transition: 0.2s ease;
+            border: 1px solid var(--glass-border);
+        }
+        .manager-checkbox-label.active { border-color: var(--accent-color); background: rgba(56, 189, 248, 0.1); }
+
+        .canvas-container {
+            position: relative; height: 500px; width: 100%; flex-grow: 1;
+            background: rgba(0, 0, 0, 0.2); border-radius: 16px; padding: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .leaderboard-container { padding: 1.5rem 1rem; }
+            .canvas-container { height: 400px; }
+            .header-title { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="leaderboard-container">
+        <a href="/" class="back-btn">← العودة للصفحة الرئيسية</a>
+        <div class="header-title">📈 المسار التاريخي للـ Score التراكمي</div>
+        <div class="header-subtitle">تتبع ترتيب المدربين عبر التاريخ لكل البطولات</div>
+        
+        <div id="loading-msg">جاري تحميل البيانات ورسم المسارات... ⏱️</div>
+
+        <div id="filters-box" class="filters-box" style="display: none;"></div>
+        <div id="canvas-wrapper" class="canvas-container" style="display: none;">
+            <canvas id="scoreHistoryChart"></canvas>
+        </div>
+    </div>
+    
+    <script type="module" src="/src/chart.ts"></script>
+</body>
+</html>
