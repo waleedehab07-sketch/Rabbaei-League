@@ -234,7 +234,7 @@ function renderSeasonCards(results: any[]) {
     historyBody.innerHTML = htmlContent;
 }
 
-// 🔥 نظام السلايدر المتطور لصور/فيديوهات التشكيلة (بدون سكرول)
+// 🔥 نظام السلايدر المتطور لصور/فيديوهات التشكيلة (محدث لدعم الجوال)
 (window as any).showSquadImages = function(encodedMedia: string) {
     let mediaList: {url: string, type: string}[] = [];
     try {
@@ -251,6 +251,20 @@ function renderSeasonCards(results: any[]) {
         modal.id = 'squad-slider-modal';
         modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 15, 25, 0.95); backdrop-filter: blur(8px); z-index: 10000; display: flex; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; flex-direction: column;';
         
+        // 🔥 الحل السحري للجوال: حقن كود CSS هنا عشان يرتب الأزرار
+        const mobileStyles = document.createElement('style');
+        mobileStyles.innerHTML = `
+            @media (max-width: 768px) {
+                /* إدخال الأزرار جوا الشاشة وإعطائها خلفية سوداء شفافة لتبرز فوق الصورة */
+                #squad-prev-btn { left: 10px !important; width: 35px !important; height: 50px !important; font-size: 1.5rem !important; background: rgba(0,0,0,0.6) !important; }
+                #squad-next-btn { right: 10px !important; width: 35px !important; height: 50px !important; font-size: 1.5rem !important; background: rgba(0,0,0,0.6) !important; }
+                /* إعطاء مساحة للصورة في الجوال */
+                #squad-media-container { max-width: 95% !important; }
+                #squad-main-img, #squad-main-video { max-height: 70vh !important; }
+            }
+        `;
+        modal.appendChild(mobileStyles);
+
         const topBar = document.createElement('div');
         topBar.style.cssText = 'position: absolute; top: 20px; width: 100%; max-width: 900px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; box-sizing: border-box; z-index: 10002;';
         
@@ -295,7 +309,7 @@ function renderSeasonCards(results: any[]) {
         document.body.appendChild(modal);
 
         const closeModal = (e: any) => {
-            if (e.target !== modal && e.target !== closeBtn) return;
+            if (e.target !== modal && e.target !== closeBtn && e.target !== mediaContainer) return;
             modal!.style.opacity = '0';
             setTimeout(() => { 
                 modal!.style.display = 'none'; 
