@@ -179,7 +179,7 @@
             .leaderboard-table tbody tr.rank-3 { background: linear-gradient(90deg, rgba(205, 127, 50, 0.08), rgba(205, 127, 50, 0.01)); border-right-color: var(--bronze); }
 
             /* -------------------------------------
-               2. جداول الأرشيف (سحب أُفقي ناعم)
+               2. جداول الأرشيف 
                ------------------------------------- */
             .tournaments-grid { grid-template-columns: 1fr; }
             .tournament-box { padding: 1rem; overflow: hidden; }
@@ -187,14 +187,36 @@
                 display: block; 
                 overflow-x: auto; 
                 white-space: nowrap; 
-                -webkit-overflow-scrolling: touch; /* سحب سلس للآيفون */
+                -webkit-overflow-scrolling: touch; 
                 border-spacing: 0; 
                 width: 100%; 
             }
             .tournament-box th, .tournament-box td { padding: 0.8rem; font-size: 0.9rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-
-            /* تصغير خطوط الملاحظات */
             .official-note { font-size: 0.85rem; padding: 1rem; line-height: 1.5; }
+
+            /* -------------------------------------
+               3. 🏆 إبداع عرض المواسم (لوحة تحكم ذكية - Grid Dashboard)
+               ------------------------------------- */
+            .tabs-header {
+                display: grid; /* تحويل النظام لشبكة ذكية بدل التوزيع العشوائي */
+                grid-template-columns: repeat(2, 1fr); /* زرين جنب بعض في كل سطر دائماً */
+                gap: 10px; /* مسافة أنيقة بين الأزرار */
+                margin-bottom: 1.8rem;
+                padding: 0;
+            }
+            .tab-btn {
+                width: 100%; /* تعبئة المساحة المخصصة بالكامل */
+                padding: 10px 5px; /* مساحات دقيقة عشان ما ياخذ طول زايد */
+                font-size: 0.95rem; /* تصغير الخط شوي ليتناسب مع الجوال */
+                border-radius: 10px; /* زوايا ناعمة أنيقة */
+                text-align: center;
+                white-space: nowrap; /* يمنع الكلمة من الانكسار لسطرين */
+                box-sizing: border-box;
+            }
+            /* إذا كان عدد المواسم فردي، الزر الأخير بياخذ عرض كامل تحت عشان الشكل يطلع فخم */
+            .tab-btn:last-child:nth-child(odd) {
+                grid-column: span 2;
+            }
         }
     </style>
 </head>
