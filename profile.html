@@ -105,11 +105,41 @@
         }
         .t-rank-badge { font-size: 1.1rem; font-weight: 900; }
 
+        /* =========================================
+           تنسيقات الجوال الاحترافية لصفحة البروفايل
+           ========================================= */
         @media (max-width: 768px) {
-            body { padding: 1rem; }
-            .profile-card { padding: 1.5rem; }
-            .history-grid { grid-template-columns: 1fr; } /* بطاقة واحدة في كل سطر على الجوال */
-            .medal-item span { font-size: 2rem; }
+            body { padding: 0.5rem; }
+            .profile-card { padding: 1.5rem 1rem; border-radius: 16px; margin-top: 1rem; }
+            .back-btn { margin-bottom: 1.5rem; padding: 6px 12px; font-size: 0.9rem; }
+            
+            .coach-icon { font-size: 4rem; margin-bottom: 0.5rem; }
+            .coach-name { font-size: 1.8rem; }
+            
+            /* ترتيب صندوق الميداليات للجوال بحيث ينقسم وتصغر الأيقونات */
+            .medals-box { 
+                flex-wrap: wrap; 
+                gap: 15px; 
+                padding: 1rem; 
+                border-radius: 12px;
+            }
+            .medal-item { width: 40%; font-size: 1rem; }
+            .medal-item span { font-size: 1.8rem; }
+
+            .history-section { margin-top: 2rem; padding-top: 1.5rem; }
+            .history-section h3 { font-size: 1.3rem; margin-bottom: 1.5rem; }
+            
+            .history-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .season-card { padding: 1rem; }
+            .season-header { font-size: 1.1rem; }
+            
+            /* ترتيب بيانات البطولة في الجوال (الاسم فوق، والتفاصيل تحت) */
+            .t-item { 
+                flex-direction: column; 
+                align-items: flex-start; 
+                gap: 10px;
+            }
+            .t-stats { width: 100%; justify-content: space-between; }
         }
     </style>
 </head>
