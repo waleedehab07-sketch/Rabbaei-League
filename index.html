@@ -66,7 +66,10 @@
 
         table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-bottom: 3rem; }
         th { text-align: right; padding: 1rem 1.5rem; color: #64748b; font-size: 0.9rem; letter-spacing: 1px; }
-        td { padding: 1.2rem 1.5rem; background: rgba(255, 255, 255, 0.02); transition: all 0.3s ease; }
+        
+        /* 🎯 إجبار كل الخلايا تتوسط عامودياً */
+        td { padding: 1.2rem 1.5rem; background: rgba(255, 255, 255, 0.02); transition: all 0.3s ease; vertical-align: middle; }
+        
         tr td:first-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
         tr td:last-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
 
@@ -78,9 +81,9 @@
         .coach-name { font-weight: 700; font-size: 1.2rem; }
         .score { font-weight: 900; font-size: 1.3rem; color: #38bdf8; text-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
         
-        /* 🏆 ترتيب الميداليات بشكل مرن ومنع كسر السطر */
-        .medals { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-        .medals span { font-size: 1.1rem; white-space: nowrap; }
+        /* 🏆 ترتيب الميداليات بشكل مرن وضبط المحاذاة العمودية (السر هنا في inline-flex) */
+        .medals { display: inline-flex; flex-wrap: wrap; gap: 10px; align-items: center; vertical-align: middle; }
+        .medals span { font-size: 1.1rem; white-space: nowrap; display: flex; align-items: center; gap: 4px; }
 
         .rank-1 td { background: linear-gradient(90deg, rgba(255, 215, 0, 0.08), rgba(255, 215, 0, 0.01)); border-right: 4px solid var(--gold); }
         .rank-2 td { background: linear-gradient(90deg, rgba(227, 228, 229, 0.08), rgba(227, 228, 229, 0.01)); border-right: 4px solid var(--silver); }
