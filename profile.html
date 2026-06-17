@@ -106,7 +106,7 @@
         .t-rank-badge { font-size: 1.1rem; font-weight: 900; }
 
         /* =========================================
-           تنسيقات الجوال الاحترافية لصفحة البروفايل
+           تنسيقات الجوال الاحترافية لصفحة البروفايل (نسخة نهائية ومضمونة)
            ========================================= */
         @media (max-width: 768px) {
             body { padding: 0.5rem; }
@@ -133,24 +133,32 @@
             .season-card { padding: 1rem; }
             .season-header { font-size: 1.1rem; }
             
-            /* ترتيب بيانات البطولة في الجوال مع حماية الأزرار من التداخل */
+            /* 🏆 حل مشكلة تداخل زر التوثيق مع الترتيب (النووي) */
+            /* بدل ما نحاول نحشرهم جنب بعض، بنخليهم تحت بعض في أسطر مستقلة */
             .t-item { 
-                flex-direction: column; 
-                align-items: flex-start; 
-                gap: 12px;
+                flex-direction: column; /* ترتيب البطولة والاسم تحت بعض */
+                align-items: stretch; /* ملء العرض بالكامل */
+                gap: 12px; /* مسافة كافية بين الاسم والإحصائيات */
+                padding: 1rem 0;
+                text-align: center; /* توسيط النص لشكل أجمل في الجوال */
+            }
+            .t-name {
+                width: 100%;
+                font-size: 1.1rem;
             }
             .t-stats { 
                 width: 100%; 
                 display: flex;
-                flex-wrap: wrap; /* يسمح للزر بالنزول لو ضاقت المساحة */
-                justify-content: space-between; 
-                align-items: center;
-                gap: 10px;
+                flex-direction: column; /* ترتيب النقاط، الترتيب، وزر التوثيق تحت بعض */
+                align-items: center; /* توسيط العناصر */
+                gap: 10px; /* مسافة بين النقاط والترتيب والزر */
             }
-            /* إجبار أي زر أو رابط توثيق إنه ياخذ مساحته براحته بدون ما يخرب النص */
+            /* توسيع زر التوثيق عشان شكله يطلع أرتب في الجوال وما يزاحم حد */
             .t-stats button, .t-stats a, .t-stats img {
-                margin-top: 5px;
-                white-space: nowrap; 
+                width: 100%;
+                max-width: 250px; /* عرض مناسب للزر على الجوال */
+                justify-content: center;
+                font-size: 0.9rem;
             }
         }
     </style>
