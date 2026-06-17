@@ -152,7 +152,7 @@
                1. تحويل الجدول الرئيسي إلى "كروت" أنيقة 
                ------------------------------------- */
             .leaderboard-table, .leaderboard-table tbody { display: block; width: 100%; }
-            .leaderboard-table thead { display: none; /* إخفاء عناوين الأعمدة في الجوال */ }
+            .leaderboard-table thead { display: none; }
             
             .leaderboard-table tbody tr { 
                 display: grid; 
@@ -170,19 +170,19 @@
             /* إلغاء التنسيقات القديمة للخلايا */
             .leaderboard-table td { padding: 0; background: transparent !important; border: none !important; border-radius: 0 !important; }
             
-            /* توزيع محتوى الكرت */
-            .leaderboard-table td:nth-child(1) { grid-column: 1; grid-row: 1 / span 2; text-align: center; font-size: 1.5rem; } /* المركز */
-            .leaderboard-table td:nth-child(2) { grid-column: 2; grid-row: 1; font-size: 1.1rem; padding-top: 5px; } /* المدرب */
-            .leaderboard-table td:nth-child(3) { grid-column: 3; grid-row: 1 / span 2; font-size: 1.4rem; text-align: left; } /* الـ Score */
+            /* 🏆 التوزيع الجديد المانع للتداخل نهائياً */
+            .leaderboard-table td:nth-child(1) { grid-column: 1; grid-row: 1 / span 2; text-align: center; font-size: 1.5rem; align-self: center; } /* المركز ثابت يسار */
+            .leaderboard-table td:nth-child(2) { grid-column: 2; grid-row: 1; font-size: 1.1rem; padding-top: 5px; } /* المدرب بالسطر الأول */
+            .leaderboard-table td:nth-child(3) { grid-column: 3; grid-row: 1; font-size: 1.4rem; text-align: left; padding-top: 5px; } /* الـ Score بالسطر الأول فقط */
             
-            /* 🏆 تعديل الميداليات في الجوال لمنع التداخل */
+            /* الميداليات تأخذ السطر الثاني بالكامل لحالها */
             .leaderboard-table td:nth-child(4) { 
-                grid-column: 2 / span 2; /* تأخذ مساحة عرضية أكبر لتجنب الانحسار */
+                grid-column: 2 / span 2; 
                 grid-row: 2; 
                 font-size: 0.85rem; 
                 padding-bottom: 5px; 
                 display: flex; 
-                flex-wrap: wrap; /* يسمح للميداليات بالنزول لسطر جديد إذا ضاقت المساحة تماماً */
+                flex-wrap: wrap; 
                 gap: 8px; 
             }
             .leaderboard-table td:nth-child(4) span { white-space: nowrap; margin-left: 0; }
