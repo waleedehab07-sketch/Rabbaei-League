@@ -106,7 +106,7 @@
         .t-rank-badge { font-size: 1.1rem; font-weight: 900; }
 
         /* =========================================
-           تنسيقات الجوال الاحترافية لصفحة البروفايل (نسخة نهائية ومضمونة)
+           تنسيقات الجوال الاحترافية لصفحة البروفايل (النسخة المدمجة)
            ========================================= */
         @media (max-width: 768px) {
             body { padding: 0.5rem; }
@@ -116,7 +116,6 @@
             .coach-icon { font-size: 4rem; margin-bottom: 0.5rem; }
             .coach-name { font-size: 1.8rem; }
             
-            /* ترتيب صندوق الميداليات للجوال بحيث ينقسم وتصغر الأيقونات */
             .medals-box { 
                 flex-wrap: wrap; 
                 gap: 15px; 
@@ -133,32 +132,33 @@
             .season-card { padding: 1rem; }
             .season-header { font-size: 1.1rem; }
             
-            /* 🏆 حل مشكلة تداخل زر التوثيق مع الترتيب (النووي) */
-            /* بدل ما نحاول نحشرهم جنب بعض، بنخليهم تحت بعض في أسطر مستقلة */
+            /* رجعناها سطر واحد، بس صغرنا المسافات والخطوط شوي عشان يكفي */
             .t-item { 
-                flex-direction: column; /* ترتيب البطولة والاسم تحت بعض */
-                align-items: stretch; /* ملء العرض بالكامل */
-                gap: 12px; /* مسافة كافية بين الاسم والإحصائيات */
-                padding: 1rem 0;
-                text-align: center; /* توسيط النص لشكل أجمل في الجوال */
-            }
-            .t-name {
-                width: 100%;
-                font-size: 1.1rem;
-            }
-            .t-stats { 
-                width: 100%; 
                 display: flex;
-                flex-direction: column; /* ترتيب النقاط، الترتيب، وزر التوثيق تحت بعض */
-                align-items: center; /* توسيط العناصر */
-                gap: 10px; /* مسافة بين النقاط والترتيب والزر */
+                flex-direction: row; 
+                justify-content: space-between;
+                align-items: center;
+                gap: 5px; /* تقليل المسافة بين الاسم والإحصائيات */
+                padding: 0.8rem 0;
             }
-            /* توسيع زر التوثيق عشان شكله يطلع أرتب في الجوال وما يزاحم حد */
-            .t-stats button, .t-stats a, .t-stats img {
-                width: 100%;
-                max-width: 250px; /* عرض مناسب للزر على الجوال */
-                justify-content: center;
-                font-size: 0.9rem;
+            .t-name { font-size: 0.85rem; } /* تصغير اسم البطولة لتوفير مساحة */
+            .t-stats { 
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 6px; /* تقليل المسافة بين النقاط والترتيب والزر */
+            }
+            .t-points { font-size: 0.75rem; padding: 2px 5px; }
+            .t-rank-badge { font-size: 0.95rem; }
+            
+            /* تصغير الزر بنسبة 15% عشان ما يدف الترتيب */
+            .t-stats button, .t-stats a {
+                padding: 4px 8px;
+                font-size: 0.75rem;
+                white-space: nowrap;
+                transform: scale(0.85); /* السحر هنا */
+                transform-origin: left center; /* عشان يصغر لجهة اليسار وما يزعج اللي جنبه */
+                margin: 0;
             }
         }
     </style>
