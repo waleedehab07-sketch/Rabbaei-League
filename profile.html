@@ -133,13 +133,25 @@
             .season-card { padding: 1rem; }
             .season-header { font-size: 1.1rem; }
             
-            /* ترتيب بيانات البطولة في الجوال (الاسم فوق، والتفاصيل تحت) */
+            /* ترتيب بيانات البطولة في الجوال مع حماية الأزرار من التداخل */
             .t-item { 
                 flex-direction: column; 
                 align-items: flex-start; 
+                gap: 12px;
+            }
+            .t-stats { 
+                width: 100%; 
+                display: flex;
+                flex-wrap: wrap; /* يسمح للزر بالنزول لو ضاقت المساحة */
+                justify-content: space-between; 
+                align-items: center;
                 gap: 10px;
             }
-            .t-stats { width: 100%; justify-content: space-between; }
+            /* إجبار أي زر أو رابط توثيق إنه ياخذ مساحته براحته بدون ما يخرب النص */
+            .t-stats button, .t-stats a, .t-stats img {
+                margin-top: 5px;
+                white-space: nowrap; 
+            }
         }
     </style>
 </head>
