@@ -252,7 +252,6 @@ function renderSeasonsAndTournaments(results: any[]) {
                 return getWeight(b.name) - getWeight(a.name);
             });
 
-            let proofUrls = attachments.map(a => a.url);
             let safeMediaParam = encodeURIComponent(JSON.stringify(attachments));
 
             contentHtml += `
@@ -536,7 +535,7 @@ function setupScoreHistoryChart(managers: any[], results: any[]) {
     };
 }
 
-// 🌐 نظام معارض الصور (Sliders)
+// 🌐 نظام معارض الصور (Sliders) - محدث لدعم الجوال
 (window as any).showSliderModal = function(encodedMedia: string) {
     let mediaList: {url: string, type: string}[] = [];
     try { mediaList = JSON.parse(decodeURIComponent(encodedMedia)); } catch (e) { return; }
@@ -550,6 +549,18 @@ function setupScoreHistoryChart(managers: any[], results: any[]) {
         modal.id = 'slider-modal';
         modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 15, 25, 0.95); backdrop-filter: blur(8px); z-index: 10000; display: flex; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; flex-direction: column;';
         
+        // 🔥 الحل السحري للجوال: حقن كود CSS هنا لترتيب الأزرار
+        const mobileStyles = document.createElement('style');
+        mobileStyles.innerHTML = `
+            @media (max-width: 768px) {
+                #slider-prev-btn { left: 10px !important; width: 35px !important; height: 50px !important; font-size: 1.5rem !important; background: rgba(0,0,0,0.6) !important; }
+                #slider-next-btn { right: 10px !important; width: 35px !important; height: 50px !important; font-size: 1.5rem !important; background: rgba(0,0,0,0.6) !important; }
+                #slider-media-container { max-width: 95% !important; }
+                #slider-main-img, #slider-main-video { max-height: 70vh !important; }
+            }
+        `;
+        modal.appendChild(mobileStyles);
+
         const topBar = document.createElement('div');
         topBar.style.cssText = 'position: absolute; top: 20px; width: 100%; max-width: 900px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; box-sizing: border-box; z-index: 10002;';
         
@@ -585,7 +596,7 @@ function setupScoreHistoryChart(managers: any[], results: any[]) {
         document.body.appendChild(modal);
 
         const closeModal = (e: any) => {
-            if (e.target !== modal && e.target !== closeBtn) return;
+            if (e.target !== modal && e.target !== closeBtn && e.target !== mediaContainer) return;
             modal!.style.opacity = '0';
             setTimeout(() => { 
                 modal!.style.display = 'none'; 
