@@ -77,8 +77,15 @@
             border: 1px solid var(--glass-border); box-shadow: inset 0 0 25px rgba(0,0,0,0.6);
         }
 
-        /* 🏁 تنسيقات سباق الأعمدة 🏁 */
-        .race-header { display: flex; justify-content: space-between; align-items: center; margin-top: 3rem; margin-bottom: 1rem; border-top: 1px solid var(--glass-border); padding-top: 2rem;}
+        /* 🏁 تنسيقات سباق الأعمدة الجديدة 🏁 */
+        .race-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; margin-top: 3rem; margin-bottom: 1rem; border-top: 1px solid var(--glass-border); padding-top: 2rem;}
+        
+        .race-settings { display: flex; gap: 10px; align-items: center; }
+        .race-select { 
+            background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); color: #fff; 
+            padding: 8px 12px; border-radius: 8px; font-family: 'Cairo'; outline: none; cursor: pointer;
+        }
+
         .race-controls { display: flex; gap: 10px; }
         .control-btn {
             background: rgba(56, 189, 248, 0.1); border: 1px solid var(--accent-color); color: var(--accent-color);
@@ -88,14 +95,17 @@
         .control-btn:hover { background: var(--accent-color); color: #0b0f19; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
         
         .race-container { position: relative; width: 100%; padding: 1rem; background: rgba(0, 0, 0, 0.2); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
-        .race-milestone-text { position: absolute; bottom: 20px; right: 30px; font-size: 3rem; font-weight: 900; color: rgba(255,255,255,0.1); z-index: 0; text-align: right; line-height: 1.2;}
-        .race-bars-wrapper { position: relative; width: 100%; z-index: 1; }
+        
+        /* 🔧 التعديل: اسم البطولة أصبح بالأعلى */
+        .race-milestone-text { position: absolute; top: 10px; right: 20px; font-size: 2.2rem; font-weight: 900; color: rgba(255,255,255,0.2); z-index: 0; text-align: right; line-height: 1.2;}
+        
+        /* ترك مسافة بالأعلى لاسم البطولة لكي لا تصطدم به الأعمدة */
+        .race-bars-wrapper { position: relative; width: 100%; z-index: 1; padding-top: 60px; transition: height 0.5s ease; }
         
         .race-bar {
             position: absolute; left: 0; height: 40px; border-radius: 8px 0 0 8px;
             display: flex; align-items: center; justify-content: space-between; padding: 0 15px;
             color: #fff; font-weight: bold; font-size: 16px;
-            /* تم إزالة الأنيميشن الثابت، الجافاسكربت سيتكفل بالسرعة الديناميكية بناءً على التواريخ */
             box-shadow: 0 4px 10px rgba(0,0,0,0.3); white-space: nowrap;
         }
         .race-name { text-shadow: 1px 1px 3px rgba(0,0,0,0.9); }
@@ -104,13 +114,8 @@
         @media (max-width: 768px) {
             body { padding: 0.5rem; align-items: stretch; }
             .leaderboard-container { padding: 1.5rem 1rem; border-radius: 16px; margin-top: 10px; min-height: 85vh; }
-            .back-btn { font-size: 0.9rem; padding: 6px 14px; margin-bottom: 1.5rem; }
-            .header-title { font-size: 1.4rem; }
-            .header-subtitle { font-size: 0.9rem; margin-bottom: 1.5rem; }
-            .filters-box { gap: 8px; margin-bottom: 1.5rem; }
-            .manager-checkbox-label { padding: 6px 14px; font-size: 0.85rem; }
-            .canvas-container { height: 400px; padding: 0.8rem; border-radius: 16px; }
-            .race-milestone-text { font-size: 1.8rem; right: 15px; bottom: 10px; }
+            .race-header { flex-direction: column; align-items: flex-start; }
+            .race-milestone-text { font-size: 1.5rem; }
             .race-bar { height: 35px; font-size: 13px; }
             .race-score { font-size: 14px; }
         }
@@ -133,6 +138,20 @@
         <div id="race-section" style="display: none;">
             <div class="race-header">
                 <h3 style="color: var(--gold); margin: 0; font-weight: 900; font-size: 1.5rem;"><i class="fas fa-trophy"></i> سباق الترتيب الزمني</h3>
+                
+                <div class="race-settings">
+                    <select id="race-limit" class="race-select">
+                        <option value="999" selected>إظهار الكل</option>
+                        <option value="10">أول 10</option>
+                        <option value="5">أول 5</option>
+                    </select>
+                    <select id="race-speed" class="race-select">
+                        <option value="2000">بطيء</option>
+                        <option value="1000" selected>وسط</option>
+                        <option value="400">سريع</option>
+                    </select>
+                </div>
+
                 <div class="race-controls">
                     <button id="race-play" class="control-btn"><i class="fas fa-play"></i> تشغيل</button>
                     <button id="race-pause" class="control-btn" style="display:none;"><i class="fas fa-pause"></i> إيقاف</button>
@@ -140,8 +159,9 @@
                 </div>
             </div>
             <div class="race-container">
-                <div id="race-milestone-display" class="race-milestone-text">جاري التجهيز...</div>
-                <div id="race-bars" class="race-bars-wrapper"></div>
+                <div id="race-bars" class="race-bars-wrapper">
+                    <div id="race-milestone-display" class="race-milestone-text">جاري التجهيز...</div>
+                </div>
             </div>
         </div>
     </div>
