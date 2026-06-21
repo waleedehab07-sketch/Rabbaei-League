@@ -39,6 +39,7 @@ async function initChartPage() {
   const loadingMsg = document.getElementById('loading-msg');
   const filtersBox = document.getElementById('filters-box');
   const canvasWrapper = document.getElementById('canvas-wrapper');
+  const raceSection = document.getElementById('race-section');
 
   try {
     const [mRecords, rRecords] = await Promise.all([
@@ -49,6 +50,7 @@ async function initChartPage() {
     if (loadingMsg) loadingMsg.style.display = 'none';
     if (filtersBox) filtersBox.style.display = 'flex';
     if (canvasWrapper) canvasWrapper.style.display = 'block';
+    if (raceSection) raceSection.style.display = 'block';
 
     buildChart(mRecords, rRecords);
   } catch (error: any) {
@@ -62,15 +64,12 @@ async function initChartPage() {
 
 function buildChart(managers: any[], results: any[]) {
   const filtersContainer = document.getElementById('filters-box');
-  const canvas = document.getElementById(
-    'scoreHistoryChart'
-  ) as HTMLCanvasElement;
+  const canvas = document.getElementById('scoreHistoryChart') as HTMLCanvasElement;
   if (!filtersContainer || !canvas) return;
 
   const ChartJS = (window as any).Chart;
   if (!ChartJS) return;
 
-  // 🔥 الترتيب الزمني الصارم (Hardcoded) المأخوذ من رسالتك حرفياً 🔥
   const milestoneOrder = [
     '2018 World Cup',
     '2018/2019 Premier League',
@@ -96,43 +95,27 @@ function buildChart(managers: any[], results: any[]) {
     '2026 World Cup',
   ];
 
-  // دالة لدمج البطولات الفرعية تحت الأسماء الرئيسية في قائمتك أعلاه
-  function getMilestoneLabel(
-    season: string,
-    tournament: string
-  ): string | null {
+  function getMilestoneLabel(season: string, tournament: string): string | null {
     let tLower = String(tournament).toLowerCase();
     let sStr = String(season).replace('-', '/').trim();
 
-    // ⛔ استبعاد قطعي لجائزة مدرب الموسم من حسابات الـ Score التراكمي
-    if (tLower.includes('manager of') || tLower.includes('مدرب الموسم')) {
-      return null;
-    }
+    if (tLower.includes('manager of') || tLower.includes('مدرب الموسم')) return null;
 
     if (
-      tLower.includes('fpl') ||
-      tLower.includes('rabbaei') ||
-      tLower.includes('h2h') ||
-      tLower.includes('draft') ||
-      tLower.includes('end of') ||
-      tLower.includes('premier') ||
-      (tLower.includes('cup') &&
-        !tLower.includes('world') &&
-        !tLower.includes('ucl') &&
-        !tLower.includes('euro'))
+      tLower.includes('fpl') || tLower.includes('rabbaei') || tLower.includes('h2h') ||
+      tLower.includes('draft') || tLower.includes('end of') || tLower.includes('premier') ||
+      (tLower.includes('cup') && !tLower.includes('world') && !tLower.includes('ucl') && !tLower.includes('euro'))
     ) {
       return `${sStr} Premier League`;
     }
 
-    if (tLower.includes('ucl') || tLower.includes('champions'))
-      return `${sStr} Champions League`;
+    if (tLower.includes('ucl') || tLower.includes('champions')) return `${sStr} Champions League`;
     if (tLower.includes('club world cup')) return `2025 FIFA Club World Cup`;
     if (tLower.includes('world cup') && sStr.split('/')[0]=='2025') return `${'2026'} World Cup`;
     if (tLower.includes('world cup')) return `${sStr.split('/')[0]} World Cup`;
 
     if (tLower.includes('euro')) {
-      if (sStr.includes('2020') || sStr.includes('2021'))
-        return 'Euro 2020 (Played in 2021)';
+      if (sStr.includes('2020') || sStr.includes('2021')) return 'Euro 2020 (Played in 2021)';
       if (sStr.includes('2024')) return 'Euro 2024';
       return `Euro ${sStr}`;
     }
@@ -142,55 +125,39 @@ function buildChart(managers: any[], results: any[]) {
 
   let timelineNodes = new Map<string, { label: string; matches: any[] }>();
 
-  // 1. تجميع كل المباريات والبطولات تحت اسم المحطة الصحيح
   results.forEach((r) => {
     let tNameRaw = r.fields['Tournament_Name (from Tournaments)'];
     let tName = Array.isArray(tNameRaw) ? tNameRaw[0] : tNameRaw;
-
     let seasonRaw = r.fields['Season (from Tournaments)'];
     let season = Array.isArray(seasonRaw) ? seasonRaw[0] : seasonRaw;
 
     if (season && tName) {
       let label = getMilestoneLabel(String(season), String(tName));
-
-      // إذا كانت البطولة هي مدرب الموسم، سيتم تجاهلها ولن تضاف للقائمة
       if (!label) return;
-
       if (!timelineNodes.has(label)) {
         timelineNodes.set(label, { label: label, matches: [] });
       }
-
       timelineNodes.get(label)!.matches.push(r);
     }
   });
 
-  // 2. الفرز الصارم بناءً على الترتيب الذي حددته أنت 🔥
   let timeline = Array.from(timelineNodes.values()).sort((a, b) => {
     let indexA = milestoneOrder.indexOf(a.label);
     let indexB = milestoneOrder.indexOf(b.label);
-
-    // إذا أضفت بطولة جديدة غير موجودة في القائمة، ضعها في النهاية مؤقتاً
     if (indexA === -1) indexA = 999;
     if (indexB === -1) indexB = 999;
-
     if (indexA !== indexB) return indexA - indexB;
     return a.label.localeCompare(b.label);
   });
 
   let labels = timeline.map((t) => t.label);
 
-  let managerMap = new Map<
-    string,
-    { name: string; totalCurrentScore: number }
-  >();
+  let managerMap = new Map<string, { name: string; totalCurrentScore: number }>();
   managers.forEach((m) => {
     if (m.fields['Name'] && String(m.fields['Name']).trim() !== '') {
       let scoreVal = m.fields['Total Score'];
       if (Array.isArray(scoreVal)) scoreVal = scoreVal[0];
-      managerMap.set(m.id, {
-        name: m.fields['Name'],
-        totalCurrentScore: Number(scoreVal) || 0,
-      });
+      managerMap.set(m.id, { name: m.fields['Name'], totalCurrentScore: Number(scoreVal) || 0 });
     }
   });
 
@@ -202,21 +169,15 @@ function buildChart(managers: any[], results: any[]) {
     runningScores[id] = 0;
   });
 
-  // 3. حساب المسار التراكمي للـ Score
   timeline.forEach((node) => {
     node.matches.forEach((match) => {
       let mIds = match.fields['Manager_ID'];
       if (Array.isArray(mIds)) {
         mIds.forEach((mId) => {
           let scoreRaw = getFieldValue(match.fields, ['Calculated_Score', 'سكور']);
-
-          if (Array.isArray(scoreRaw)) {
-            scoreRaw = scoreRaw[0];
-          }
-
+          if (Array.isArray(scoreRaw)) scoreRaw = scoreRaw[0];
           let scoreToAdd = parseFloat(String(scoreRaw));
           if (isNaN(scoreToAdd)) scoreToAdd = 0;
-
           if (runningScores[mId] !== undefined) {
             runningScores[mId] += scoreToAdd;
           }
@@ -229,7 +190,6 @@ function buildChart(managers: any[], results: any[]) {
     });
   });
 
-  // ترتيب المدربين في الفلاتر بناءً على أقوى Score حالي
   let sortedManagers = Array.from(managerMap.entries()).sort(
     (a, b) => b[1].totalCurrentScore - a[1].totalCurrentScore
   );
@@ -243,98 +203,62 @@ function buildChart(managers: any[], results: any[]) {
     let bgColor = `hsla(${hue}, 85%, 60%, 0.1)`;
 
     datasets.push({
-      id: id,
-      label: data.name,
-      data: managerScores[id],
-      borderColor: color,
-      backgroundColor: bgColor,
-      tension: 0.3,
-      borderWidth: 3,
-      pointRadius: 4,
-      pointHoverRadius: 8,
-      pointBackgroundColor: color,
-      hidden: index >= 5,
+      id: id, label: data.name, data: managerScores[id],
+      borderColor: color, backgroundColor: bgColor, tension: 0.3,
+      borderWidth: 3, pointRadius: 4, pointHoverRadius: 8,
+      pointBackgroundColor: color, hidden: index >= 5,
     });
   });
 
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
-  // 4. التصميم الفخم المعتمد
   const chart = new ChartJS(ctx, {
     type: 'line',
     data: { labels, datasets },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
+      responsive: true, maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: 'rgba(15, 23, 42, 0.95)',
-          titleColor: '#38bdf8',
-          bodyColor: '#fff',
-          borderColor: 'rgba(56, 189, 248, 0.4)',
-          borderWidth: 1,
-          padding: 15,
-          bodyFont: { family: 'Cairo', size: 14 },
+          backgroundColor: 'rgba(15, 23, 42, 0.95)', titleColor: '#38bdf8',
+          bodyColor: '#fff', borderColor: 'rgba(56, 189, 248, 0.4)',
+          borderWidth: 1, padding: 15, bodyFont: { family: 'Cairo', size: 14 },
           titleFont: { family: 'Cairo', weight: 'bold', size: 15 },
           callbacks: {
             label: function (context: any) {
               let label = context.dataset.label || '';
-              if (label) {
-                label += ': ';
-              }
-              if (context.parsed.y !== null) {
-                label += Number(context.parsed.y).toFixed(3) + ' Score';
-              }
+              if (label) label += ': ';
+              if (context.parsed.y !== null) label += Number(context.parsed.y).toFixed(3) + ' Score';
               return label;
             },
           },
         },
       },
       scales: {
-        x: {
-          grid: { color: 'rgba(255,255,255,0.05)' },
-          ticks: { color: '#94a3b8', font: { family: 'Cairo', size: 11 } },
-        },
-        y: {
-          grid: { color: 'rgba(255,255,255,0.05)' },
-          ticks: {
-            color: '#cbd5e1',
-            font: { family: 'Cairo', weight: 'bold' },
-          },
-        },
+        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { family: 'Cairo', size: 11 } } },
+        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#cbd5e1', font: { family: 'Cairo', weight: 'bold' } } },
       },
     },
   });
 
-  // 5. الفلاتر الأنيقة
   filtersContainer.innerHTML = '';
   datasets.forEach((dataset, i) => {
     const label = document.createElement('label');
     label.className = 'manager-checkbox-label';
+    if (!dataset.hidden) label.classList.add('active');
 
-    if (!dataset.hidden) {
-      label.classList.add('active');
-    }
-
-    label.style.borderColor = dataset.hidden
-      ? 'var(--glass-border)'
-      : dataset.borderColor;
-    label.style.background = dataset.hidden
-      ? 'rgba(255,255,255,0.04)'
-      : dataset.backgroundColor;
+    label.style.borderColor = dataset.hidden ? 'var(--glass-border)' : dataset.borderColor;
+    label.style.background = dataset.hidden ? 'rgba(255,255,255,0.04)' : dataset.backgroundColor;
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.checked = !dataset.hidden;
-    checkbox.style.cssText =
-      'cursor: pointer; width: 16px; height: 16px; margin: 0;';
+    checkbox.style.cssText = 'cursor: pointer; width: 16px; height: 16px; margin: 0;';
 
     checkbox.addEventListener('change', () => {
       chart.data.datasets[i].hidden = !checkbox.checked;
-
       if (checkbox.checked) {
         label.classList.add('active');
         label.style.borderColor = dataset.borderColor;
@@ -344,7 +268,6 @@ function buildChart(managers: any[], results: any[]) {
         label.style.borderColor = 'var(--glass-border)';
         label.style.background = 'rgba(255,255,255,0.04)';
       }
-
       chart.update();
     });
 
@@ -352,6 +275,132 @@ function buildChart(managers: any[], results: any[]) {
     label.appendChild(document.createTextNode(dataset.label));
     filtersContainer.appendChild(label);
   });
+
+  // =========================================
+  // 🏁 محرك سباق الأعمدة (Bar Chart Race Engine) 🏁
+  // =========================================
+  initRaceEngine(sortedManagers, managerScores, labels, hueStep);
+}
+
+function initRaceEngine(sortedManagers: any[], managerScores: any, labels: string[], hueStep: number) {
+    const raceBarsContainer = document.getElementById('race-bars');
+    const milestoneDisplay = document.getElementById('race-milestone-display');
+    const playBtn = document.getElementById('race-play');
+    const pauseBtn = document.getElementById('race-pause');
+    const replayBtn = document.getElementById('race-replay');
+
+    if (!raceBarsContainer || !milestoneDisplay || !playBtn || !pauseBtn || !replayBtn) return;
+
+    // حساب الارتفاع المطلوب للحاوية بناءً على عدد المدربين (50 بكسل لكل مدرب)
+    const BAR_HEIGHT_SPACING = 50;
+    raceBarsContainer.style.height = `${sortedManagers.length * BAR_HEIGHT_SPACING}px`;
+
+    let currentStep = 0;
+    let raceInterval: any;
+    let isPlaying = false;
+
+    const barElements = new Map<string, HTMLDivElement>();
+    const barScoreElements = new Map<string, HTMLSpanElement>();
+
+    // تهيئة الأعمدة لكل مدرب
+    sortedManagers.forEach(([id, data], index) => {
+        const hue = Math.floor(index * hueStep * 2.5) % 360;
+        const color = `hsl(${hue}, 85%, 55%)`;
+
+        const bar = document.createElement('div');
+        bar.className = 'race-bar';
+        bar.style.backgroundColor = color;
+        bar.style.width = '0%';
+        bar.style.transform = `translateY(${index * BAR_HEIGHT_SPACING}px)`; 
+
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'race-name';
+        nameSpan.textContent = data.name;
+
+        const scoreSpan = document.createElement('span');
+        scoreSpan.className = 'race-score';
+        scoreSpan.textContent = '0.000';
+
+        bar.appendChild(nameSpan);
+        bar.appendChild(scoreSpan);
+        raceBarsContainer.appendChild(bar);
+
+        barElements.set(id, bar);
+        barScoreElements.set(id, scoreSpan);
+    });
+
+    // دالة رسم المشهد (الترتيب في جولة معينة)
+    function renderRaceStep(step: number) {
+        if (step >= labels.length) {
+            pauseRace();
+            return;
+        }
+
+        // تنسيق الاسم ليكون واضح كخلفية
+        milestoneDisplay.innerHTML = labels[step].replace(' ', '<br>');
+
+        let stepScores: { id: string, score: number, name: string }[] = [];
+        sortedManagers.forEach(([id, data]) => {
+            stepScores.push({ id, score: managerScores[id][step] || 0, name: data.name });
+        });
+
+        // الفرز الديناميكي للمراكز
+        stepScores.sort((a, b) => b.score - a.score);
+
+        // إيجاد أعلى رقم عشان ننسب عرض باقي الأعمدة له
+        let maxScore = stepScores[0].score;
+        if (maxScore === 0) maxScore = 1;
+
+        // تطبيق الأنيميشن والمراكز الجديدة
+        stepScores.forEach((item, rank) => {
+            const bar = barElements.get(item.id)!;
+            const scoreSpan = barScoreElements.get(item.id)!;
+
+            let widthPercent = (item.score / maxScore) * 100;
+            if (widthPercent < 15) widthPercent = 15; // أقل عرض عشان الاسم يظل مقروء
+
+            bar.style.width = `${widthPercent}%`;
+            bar.style.transform = `translateY(${rank * BAR_HEIGHT_SPACING}px)`; // الانزلاق للمركز الجديد
+            
+            // تحديث الرقم المعروض
+            scoreSpan.textContent = item.score.toFixed(3);
+        });
+
+        currentStep++;
+    }
+
+    function playRace() {
+        if (currentStep >= labels.length) currentStep = 0; 
+        isPlaying = true;
+        playBtn.style.display = 'none';
+        pauseBtn.style.display = 'inline-flex';
+        
+        renderRaceStep(currentStep); // ارسم فوراً
+        raceInterval = setInterval(() => {
+            renderRaceStep(currentStep);
+        }, 1500); // ⏱️ كل جولة تأخذ ثانية ونصف (توقيت سينمائي)
+    }
+
+    function pauseRace() {
+        isPlaying = false;
+        clearInterval(raceInterval);
+        playBtn.style.display = 'inline-flex';
+        pauseBtn.style.display = 'none';
+    }
+
+    function replayRace() {
+        pauseRace();
+        currentStep = 0;
+        renderRaceStep(currentStep);
+        playRace();
+    }
+
+    playBtn.addEventListener('click', playRace);
+    pauseBtn.addEventListener('click', pauseRace);
+    replayBtn.addEventListener('click', replayRace);
+
+    // تجهيز أول مشهد (الجولة صفر)
+    renderRaceStep(0);
 }
 
 try {
