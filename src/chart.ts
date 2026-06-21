@@ -123,7 +123,8 @@ function buildChart(managers: any[], results: any[]) {
     return `${sStr} ${tournament}`;
   }
 
-  let timelineNodes = new Map<string, { label: string; matches: any[] }>();
+  // 🛡️ التعديل: تخزين الـ date بجانب اللابل لتحديد وقت السباق
+  let timelineNodes = new Map<string, { label: string; matches: any[], date?: Date }>();
 
   results.forEach((r) => {
     let tNameRaw = r.fields['Tournament_Name (from Tournaments)'];
@@ -131,13 +132,29 @@ function buildChart(managers: any[], results: any[]) {
     let seasonRaw = r.fields['Season (from Tournaments)'];
     let season = Array.isArray(seasonRaw) ? seasonRaw[0] : seasonRaw;
 
+    // استخراج التاريخ الفعلي للجولة من جدول النتائج (أو المرتبط من جدول البطولات)
+    let dateRaw = getFieldValue(r.fields, ['Date (from Tournaments)', 'Date', 'تاريخ']);
+    let dateVal = Array.isArray(dateRaw) ? dateRaw[0] : dateRaw;
+
     if (season && tName) {
       let label = getMilestoneLabel(String(season), String(tName));
       if (!label) return;
+
       if (!timelineNodes.has(label)) {
         timelineNodes.set(label, { label: label, matches: [] });
       }
       timelineNodes.get(label)!.matches.push(r);
+
+      // حفظ أقدم تاريخ لهذه المحطة لتحديد وقت البداية الحقيقي لها
+      if (dateVal) {
+          let parsedDate = new Date(dateVal);
+          if (!isNaN(parsedDate.getTime())) {
+              let existingDate = timelineNodes.get(label)!.date;
+              if (!existingDate || parsedDate < existingDate) {
+                  timelineNodes.get(label)!.date = parsedDate;
+              }
+          }
+      }
     }
   });
 
@@ -277,12 +294,12 @@ function buildChart(managers: any[], results: any[]) {
   });
 
   // =========================================
-  // 🏁 محرك سباق الأعمدة (Bar Chart Race Engine) 🏁
+  // 🏁 محرك سباق الأعمدة (مع التوقيت الديناميكي المبني على التواريخ الحقيقية)
   // =========================================
-  initRaceEngine(sortedManagers, managerScores, labels, hueStep);
+  initRaceEngine(sortedManagers, managerScores, labels, hueStep, timeline);
 }
 
-function initRaceEngine(sortedManagers: any[], managerScores: any, labels: string[], hueStep: number) {
+function initRaceEngine(sortedManagers: any[], managerScores: any, labels: string[], hueStep: number, timeline: any[]) {
     const raceBarsContainer = document.getElementById('race-bars');
     const milestoneDisplay = document.getElementById('race-milestone-display');
     const playBtn = document.getElementById('race-play');
@@ -291,18 +308,33 @@ function initRaceEngine(sortedManagers: any[], managerScores: any, labels: strin
 
     if (!raceBarsContainer || !milestoneDisplay || !playBtn || !pauseBtn || !replayBtn) return;
 
-    // حساب الارتفاع المطلوب للحاوية بناءً على عدد المدربين (50 بكسل لكل مدرب)
+    // حساب المدد الزمنية الديناميكية (Durations) بين كل جولة والجولة التي تليها
+    let durations: number[] = [];
+    for (let i = 0; i < timeline.length; i++) {
+        let currentDt = timeline[i].date;
+        let nextDt = (i + 1 < timeline.length) ? timeline[i+1].date : null;
+        let duration = 1500; // السرعة الافتراضية
+        
+        if (currentDt && nextDt) {
+            let diffDays = Math.abs(nextDt.getTime() - currentDt.getTime()) / (1000 * 60 * 60 * 24);
+            // المعادلة: 800 ملي ثانية كأساس + 15 ملي ثانية لكل يوم مسافة بينهم (كل ما طالت المدة، يبطئ السباق ليكون واقعي)
+            duration = 800 + (diffDays * 15);
+            if (duration < 800) duration = 800;
+            if (duration > 4500) duration = 4500; // سقف السرعة البطيئة (مثل التوقف الصيفي ما يتعدى 4.5 ثواني)
+        }
+        durations.push(duration);
+    }
+
     const BAR_HEIGHT_SPACING = 50;
     raceBarsContainer.style.height = `${sortedManagers.length * BAR_HEIGHT_SPACING}px`;
 
     let currentStep = 0;
-    let raceInterval: any;
+    let raceTimeout: any;
     let isPlaying = false;
 
     const barElements = new Map<string, HTMLDivElement>();
     const barScoreElements = new Map<string, HTMLSpanElement>();
 
-    // تهيئة الأعمدة لكل مدرب
     sortedManagers.forEach(([id, data], index) => {
         const hue = Math.floor(index * hueStep * 2.5) % 360;
         const color = `hsl(${hue}, 85%, 55%)`;
@@ -329,14 +361,7 @@ function initRaceEngine(sortedManagers: any[], managerScores: any, labels: strin
         barScoreElements.set(id, scoreSpan);
     });
 
-    // دالة رسم المشهد (الترتيب في جولة معينة)
     function renderRaceStep(step: number) {
-        if (step >= labels.length) {
-            pauseRace();
-            return;
-        }
-
-        // تنسيق الاسم ليكون واضح كخلفية
         milestoneDisplay.innerHTML = labels[step].replace(' ', '<br>');
 
         let stepScores: { id: string, score: number, name: string }[] = [];
@@ -344,29 +369,46 @@ function initRaceEngine(sortedManagers: any[], managerScores: any, labels: strin
             stepScores.push({ id, score: managerScores[id][step] || 0, name: data.name });
         });
 
-        // الفرز الديناميكي للمراكز
         stepScores.sort((a, b) => b.score - a.score);
 
-        // إيجاد أعلى رقم عشان ننسب عرض باقي الأعمدة له
         let maxScore = stepScores[0].score;
         if (maxScore === 0) maxScore = 1;
 
-        // تطبيق الأنيميشن والمراكز الجديدة
         stepScores.forEach((item, rank) => {
             const bar = barElements.get(item.id)!;
             const scoreSpan = barScoreElements.get(item.id)!;
 
             let widthPercent = (item.score / maxScore) * 100;
-            if (widthPercent < 15) widthPercent = 15; // أقل عرض عشان الاسم يظل مقروء
+            if (widthPercent < 15) widthPercent = 15; 
 
             bar.style.width = `${widthPercent}%`;
-            bar.style.transform = `translateY(${rank * BAR_HEIGHT_SPACING}px)`; // الانزلاق للمركز الجديد
-            
-            // تحديث الرقم المعروض
+            bar.style.transform = `translateY(${rank * BAR_HEIGHT_SPACING}px)`; 
             scoreSpan.textContent = item.score.toFixed(3);
         });
 
         currentStep++;
+    }
+
+    // المُحرك المعتمد على الـ Timeouts للحفاظ على المسافات الزمنية الواقعية
+    function runNextStep() {
+        if (!isPlaying) return;
+        if (currentStep >= labels.length) {
+            pauseRace();
+            return;
+        }
+
+        let currentDuration = durations[currentStep] || 1500;
+        let animDuration = currentDuration * 0.85; // جعل الأنيميشن يأخذ 85% من الوقت المحسوب ليترك مساحة بسيطة لتهدئة العين
+        
+        barElements.forEach(bar => {
+            bar.style.transition = `transform ${animDuration}ms ease-in-out, width ${animDuration}ms ease-in-out`;
+        });
+        
+        renderRaceStep(currentStep); 
+        
+        raceTimeout = setTimeout(() => {
+            runNextStep();
+        }, currentDuration);
     }
 
     function playRace() {
@@ -374,16 +416,12 @@ function initRaceEngine(sortedManagers: any[], managerScores: any, labels: strin
         isPlaying = true;
         playBtn.style.display = 'none';
         pauseBtn.style.display = 'inline-flex';
-        
-        renderRaceStep(currentStep); // ارسم فوراً
-        raceInterval = setInterval(() => {
-            renderRaceStep(currentStep);
-        }, 1500); // ⏱️ كل جولة تأخذ ثانية ونصف (توقيت سينمائي)
+        runNextStep();
     }
 
     function pauseRace() {
         isPlaying = false;
-        clearInterval(raceInterval);
+        clearTimeout(raceTimeout);
         playBtn.style.display = 'inline-flex';
         pauseBtn.style.display = 'none';
     }
@@ -391,16 +429,21 @@ function initRaceEngine(sortedManagers: any[], managerScores: any, labels: strin
     function replayRace() {
         pauseRace();
         currentStep = 0;
+        
+        // الانتقال السريع للمرحلة صفر بدون وقت طويل
+        barElements.forEach(bar => {
+            bar.style.transition = `transform 300ms ease-in-out, width 300ms ease-in-out`;
+        });
         renderRaceStep(currentStep);
-        playRace();
+        setTimeout(playRace, 400); // بدء السباق بعد رجوع الأعمدة
     }
 
     playBtn.addEventListener('click', playRace);
     pauseBtn.addEventListener('click', pauseRace);
     replayBtn.addEventListener('click', replayRace);
 
-    // تجهيز أول مشهد (الجولة صفر)
-    renderRaceStep(0);
+    // تجهيز المشهد الأول (الجولة 0) فور تحميل الصفحة
+    setTimeout(() => renderRaceStep(0), 100);
 }
 
 try {
