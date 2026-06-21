@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>المسار التاريخي للـ Score | دوري رباعي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
@@ -27,7 +28,6 @@
             display: flex; justify-content: center; align-items: flex-start;
         }
 
-        /* 🔧 تثبيت عرض المربع وطوله ليكون فخم من أول ثانية */
         .leaderboard-container {
             width: 100%; max-width: 1200px;
             background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
@@ -37,7 +37,6 @@
             display: flex; flex-direction: column;
         }
 
-        /* تنسيق زر العودة ليكون أنيق ومتحرك */
         .back-btn {
             align-self: flex-start;
             background: rgba(56, 189, 248, 0.1); color: var(--accent-color);
@@ -50,84 +49,102 @@
         .header-title { color: var(--gold); font-weight: 900; font-size: 2rem; margin-bottom: 0.5rem; text-align: center; text-shadow: 0 0 15px rgba(251, 191, 36, 0.2); }
         .header-subtitle { text-align: center; color: #94a3b8; font-size: 1.1rem; margin-bottom: 2rem; }
 
-        /* 🔧 توسيط رسالة التحميل وإضافة تأثير نبض (Pulse) */
         #loading-msg {
             text-align: center; color: var(--accent-color); font-size: 1.3rem; font-weight: bold;
             margin: auto 0; padding: 2rem; animation: pulse 1.5s infinite alternate;
         }
         @keyframes pulse { from { opacity: 0.5; } to { opacity: 1; text-shadow: 0 0 15px rgba(56, 189, 248, 0.5); } }
 
-        /* 🎨 تصميم إبداعي للفلتر (أزرار المدربين كبسولات ذكية) */
-        .filters-box {
-            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 2rem;
-        }
+        .filters-box { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 2rem; }
 
         .manager-checkbox-label {
             display: inline-flex; align-items: center; justify-content: center;
             color: #94a3b8; font-size: 0.95rem; font-weight: bold;
             background: rgba(0, 0, 0, 0.4); padding: 8px 18px; 
             border-radius: 50px; cursor: pointer; transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            user-select: none;
+            border: 1px solid rgba(255, 255, 255, 0.1); user-select: none;
         }
-        
         .manager-checkbox-label:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
-
-        /* السحر البرمجي: تغيير لون الكبسولة بالكامل إذا كان التشيك بوكس الداخلي مفعل */
         .manager-checkbox-label:has(input:checked) {
-            background: rgba(56, 189, 248, 0.15);
-            border-color: var(--accent-color);
-            color: #fff;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
-            transform: scale(1.05);
+            background: rgba(56, 189, 248, 0.15); border-color: var(--accent-color); color: #fff;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); transform: scale(1.05);
         }
-
-        /* إخفاء مربع التشيك بوكس التقليدي */
         .manager-checkbox-label input[type="checkbox"] { display: none; }
 
-        /* تصميم شاشة الرسم البياني (شاشة مجوفة للداخل) */
         .canvas-container {
             position: relative; height: 500px; width: 100%; flex-grow: 1;
             background: rgba(0, 0, 0, 0.3); border-radius: 20px; padding: 1.5rem;
-            border: 1px solid var(--glass-border);
-            box-shadow: inset 0 0 25px rgba(0,0,0,0.6); /* ظل داخلي يعطي عمق */
+            border: 1px solid var(--glass-border); box-shadow: inset 0 0 25px rgba(0,0,0,0.6);
         }
 
-        /* =========================================
-           تنسيقات الجوال الاحترافية
-           ========================================= */
+        /* 🏁 تنسيقات سباق الأعمدة (Bar Chart Race) 🏁 */
+        .race-header { display: flex; justify-content: space-between; align-items: center; margin-top: 3rem; margin-bottom: 1rem; border-top: 1px solid var(--glass-border); padding-top: 2rem;}
+        .race-controls { display: flex; gap: 10px; }
+        .control-btn {
+            background: rgba(56, 189, 248, 0.1); border: 1px solid var(--accent-color); color: var(--accent-color);
+            padding: 10px 20px; border-radius: 12px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; transition: 0.3s;
+            display: flex; align-items: center; gap: 8px; font-size: 1rem;
+        }
+        .control-btn:hover { background: var(--accent-color); color: #0b0f19; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
+        
+        .race-container { position: relative; width: 100%; padding: 1rem; background: rgba(0, 0, 0, 0.2); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+        .race-milestone-text { position: absolute; bottom: 20px; right: 30px; font-size: 3rem; font-weight: 900; color: rgba(255,255,255,0.1); z-index: 0; text-align: right; line-height: 1.2;}
+        .race-bars-wrapper { position: relative; width: 100%; z-index: 1; }
+        
+        .race-bar {
+            position: absolute; left: 0; height: 40px; border-radius: 8px 0 0 8px;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 15px;
+            color: #fff; font-weight: bold; font-size: 16px;
+            transition: transform 1s ease-in-out, width 1s ease-in-out; /* سرعة ونعومة التبديل */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            white-space: nowrap;
+        }
+        .race-name { text-shadow: 1px 1px 3px rgba(0,0,0,0.9); }
+        .race-score { font-family: monospace; font-size: 18px; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); font-weight: 900; }
+
         @media (max-width: 768px) {
             body { padding: 0.5rem; align-items: stretch; }
             .leaderboard-container { padding: 1.5rem 1rem; border-radius: 16px; margin-top: 10px; min-height: 85vh; }
-            
             .back-btn { font-size: 0.9rem; padding: 6px 14px; margin-bottom: 1.5rem; }
             .header-title { font-size: 1.4rem; }
             .header-subtitle { font-size: 0.9rem; margin-bottom: 1.5rem; }
-            
-            /* ترتيب كبسولات الفلاتر في الجوال عشان تاخذ مساحة أنيقة */
             .filters-box { gap: 8px; margin-bottom: 1.5rem; }
             .manager-checkbox-label { padding: 6px 14px; font-size: 0.85rem; }
+            .canvas-container { height: 400px; padding: 0.8rem; border-radius: 16px; }
             
-            /* تصغير مساحة الرسم البياني وتوسيع هوامشه ليتناسب مع الجوال */
-            .canvas-container { 
-                height: 400px; 
-                padding: 0.8rem;
-                border-radius: 16px;
-            }
+            .race-milestone-text { font-size: 1.8rem; right: 15px; bottom: 10px; }
+            .race-bar { height: 35px; font-size: 13px; }
+            .race-score { font-size: 14px; }
         }
     </style>
 </head>
 <body>
     <div class="leaderboard-container">
-        <a href="/" class="back-btn">← العودة للصفحة الرئيسية</a>
+        <a href="/" class="back-btn"><i class="fas fa-arrow-right"></i> العودة للصفحة الرئيسية</a>
         <div class="header-title">📈 المسار التاريخي للـ Score التراكمي</div>
         <div class="header-subtitle">تتبع ترتيب المدربين عبر التاريخ لكل البطولات</div>
         
         <div id="loading-msg">جاري تحميل البيانات ورسم المسارات... ⏱️</div>
 
         <div id="filters-box" class="filters-box" style="display: none;"></div>
+        
         <div id="canvas-wrapper" class="canvas-container" style="display: none;">
             <canvas id="scoreHistoryChart"></canvas>
+        </div>
+
+        <div id="race-section" style="display: none;">
+            <div class="race-header">
+                <h3 style="color: var(--gold); margin: 0; font-weight: 900; font-size: 1.5rem;"><i class="fas fa-trophy"></i> سباق الترتيب الزمني</h3>
+                <div class="race-controls">
+                    <button id="race-play" class="control-btn"><i class="fas fa-play"></i> تشغيل</button>
+                    <button id="race-pause" class="control-btn" style="display:none;"><i class="fas fa-pause"></i> إيقاف</button>
+                    <button id="race-replay" class="control-btn"><i class="fas fa-redo"></i> إعادة</button>
+                </div>
+            </div>
+            <div class="race-container">
+                <div id="race-milestone-display" class="race-milestone-text">جاري التجهيز...</div>
+                <div id="race-bars" class="race-bars-wrapper"></div>
+            </div>
         </div>
     </div>
     
