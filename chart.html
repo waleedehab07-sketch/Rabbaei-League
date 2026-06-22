@@ -13,16 +13,16 @@
         
         :root {
             --bg-color: #0b0f19;
-            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-bg: rgba(15, 23, 42, 0.6);
             --glass-border: rgba(255, 255, 255, 0.08);
-            --hover-bg: rgba(255, 255, 255, 0.08);
             --accent-color: #38bdf8;
             --gold: #fbbf24;
+            --gold-glow: rgba(251, 191, 36, 0.4);
         }
 
         body {
             margin: 0; min-height: 100vh;
-            background: radial-gradient(circle at top right, #1a233a, var(--bg-color));
+            background: radial-gradient(circle at top right, #1e293b, var(--bg-color));
             font-family: 'Cairo', sans-serif; color: #e2e8f0;
             padding: 2rem;
             display: flex; justify-content: center; align-items: flex-start;
@@ -30,104 +30,112 @@
 
         .leaderboard-container {
             width: 100%; max-width: 1200px;
-            background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border); border-radius: 24px;
-            padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            padding: 2.5rem; box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8);
             min-height: 80vh; 
             display: flex; flex-direction: column;
         }
 
         .back-btn {
             align-self: flex-start;
-            background: rgba(56, 189, 248, 0.1); color: var(--accent-color);
+            background: linear-gradient(135deg, rgba(56,189,248,0.1), rgba(56,189,248,0.05));
+            color: var(--accent-color);
             padding: 8px 18px; border-radius: 12px; text-decoration: none; font-weight: 900;
-            transition: all 0.3s ease; margin-bottom: 2rem; border: 1px solid var(--accent-color);
+            transition: all 0.3s ease; margin-bottom: 2rem; border: 1px solid rgba(56, 189, 248, 0.3);
             display: flex; align-items: center; gap: 8px;
         }
-        .back-btn:hover { background: var(--accent-color); color: #0b0f19; transform: translateX(5px); }
+        .back-btn:hover { background: var(--accent-color); color: #0b0f19; transform: translateX(5px); box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
 
-        .header-title { color: var(--gold); font-weight: 900; font-size: 2rem; margin-bottom: 0.5rem; text-align: center; text-shadow: 0 0 15px rgba(251, 191, 36, 0.2); }
-        .header-subtitle { text-align: center; color: #94a3b8; font-size: 1.1rem; margin-bottom: 2rem; }
+        .header-title { color: #fff; font-weight: 900; font-size: 2.2rem; margin-bottom: 0.5rem; text-align: center; text-shadow: 0 0 20px rgba(255,255,255,0.1); }
+        .header-title span { color: var(--gold); text-shadow: 0 0 15px var(--gold-glow); }
+        .header-subtitle { text-align: center; color: #94a3b8; font-size: 1.1rem; margin-bottom: 2rem; font-weight: bold; letter-spacing: 0.5px; }
 
         #loading-msg {
             text-align: center; color: var(--accent-color); font-size: 1.3rem; font-weight: bold;
             margin: auto 0; padding: 2rem; animation: pulse 1.5s infinite alternate;
         }
-        @keyframes pulse { from { opacity: 0.5; } to { opacity: 1; text-shadow: 0 0 15px rgba(56, 189, 248, 0.5); } }
+        @keyframes pulse { from { opacity: 0.6; transform: scale(0.98); } to { opacity: 1; transform: scale(1); text-shadow: 0 0 15px rgba(56, 189, 248, 0.6); } }
 
         .filters-box { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 2rem; }
 
         .manager-checkbox-label {
             display: inline-flex; align-items: center; justify-content: center;
-            color: #94a3b8; font-size: 0.95rem; font-weight: bold;
-            background: rgba(0, 0, 0, 0.4); padding: 8px 18px; 
+            color: #cbd5e1; font-size: 0.95rem; font-weight: bold;
+            background: rgba(0, 0, 0, 0.5); padding: 8px 18px; 
             border-radius: 50px; cursor: pointer; transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1); user-select: none;
+            border: 1px solid var(--glass-border); user-select: none;
         }
-        .manager-checkbox-label:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+        .manager-checkbox-label:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
         .manager-checkbox-label:has(input:checked) {
-            background: rgba(56, 189, 248, 0.15); border-color: var(--accent-color); color: #fff;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(56, 189, 248, 0.05));
+            border-color: var(--accent-color); color: #fff;
             box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); transform: scale(1.05);
         }
         .manager-checkbox-label input[type="checkbox"] { display: none; }
 
         .canvas-container {
             position: relative; height: 500px; width: 100%; flex-grow: 1;
-            background: rgba(0, 0, 0, 0.3); border-radius: 20px; padding: 1.5rem;
-            border: 1px solid var(--glass-border); box-shadow: inset 0 0 25px rgba(0,0,0,0.6);
+            background: rgba(0, 0, 0, 0.4); border-radius: 20px; padding: 1.5rem;
+            border: 1px solid var(--glass-border); box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
         }
 
-        /* 🏁 تنسيقات سباق الأعمدة الاحترافية 🏁 */
+        /* 🏁 تنسيقات سباق الأعمدة الاحترافية (Luxurious Race) 🏁 */
         .race-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; margin-top: 3rem; margin-bottom: 1rem; border-top: 1px solid var(--glass-border); padding-top: 2rem;}
         
-        .race-settings { display: flex; gap: 10px; align-items: center; }
+        .race-settings { display: flex; gap: 10px; align-items: center; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 12px; border: 1px solid var(--glass-border);}
         .race-select { 
-            background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); color: #fff; 
-            padding: 8px 12px; border-radius: 8px; font-family: 'Cairo'; outline: none; cursor: pointer;
+            background: transparent; border: none; color: #cbd5e1; 
+            padding: 8px 12px; border-radius: 8px; font-family: 'Cairo'; outline: none; cursor: pointer; font-weight: bold;
         }
+        .race-select option { background: #0f172a; color: #fff; }
 
         .race-controls { display: flex; gap: 10px; }
         .control-btn {
-            background: rgba(56, 189, 248, 0.1); border: 1px solid var(--accent-color); color: var(--accent-color);
-            padding: 10px 20px; border-radius: 12px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; transition: 0.3s;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(56, 189, 248, 0.05));
+            border: 1px solid rgba(56, 189, 248, 0.4); color: var(--accent-color);
+            padding: 10px 20px; border-radius: 12px; cursor: pointer; font-family: 'Cairo'; font-weight: 900; transition: 0.3s;
             display: flex; align-items: center; gap: 8px; font-size: 1rem;
         }
-        .control-btn:hover { background: var(--accent-color); color: #0b0f19; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
+        .control-btn:hover { background: var(--accent-color); color: #0b0f19; box-shadow: 0 0 20px rgba(56, 189, 248, 0.5); transform: translateY(-2px); }
         
-        .race-container { position: relative; width: 100%; padding: 1rem; padding-bottom: 2rem; background: rgba(0, 0, 0, 0.2); border-radius: 16px; overflow-x: hidden; border: 1px solid rgba(255,255,255,0.05); }
+        .race-container { position: relative; width: 100%; padding: 1rem; padding-bottom: 2rem; background: rgba(0, 0, 0, 0.3); border-radius: 20px; overflow-x: hidden; border: 1px solid rgba(255,255,255,0.05); box-shadow: inset 0 0 30px rgba(0,0,0,0.5);}
         
-        /* اسم البطولة في الأعلى بارز وواضح */
-        .race-milestone-text { position: absolute; top: 15px; right: 20px; font-size: 2.2rem; font-weight: 900; color: rgba(255,255,255,0.2); z-index: 0; text-align: right; line-height: 1.2;}
+        /* اسم البطولة في الأعلى بارز ومضيء */
+        .race-milestone-text { position: absolute; top: 15px; right: 20px; font-size: 2.2rem; font-weight: 900; color: rgba(255,255,255,0.15); z-index: 0; text-align: right; line-height: 1.2; text-transform: uppercase; letter-spacing: 2px;}
         
-        /* حماية التباعد العلوي لمنع تصادم الأعمدة مع النص */
-        .race-bars-wrapper { position: relative; width: 100%; z-index: 1; padding-top: 65px; transition: height 0.5s ease; }
+        .race-bars-wrapper { position: relative; width: 100%; z-index: 1; padding-top: 70px; transition: height 0.5s ease; }
         
+        /* تصميم العمود الأنيق الزجاجي */
         .race-bar {
-            position: absolute; left: 0; height: 40px; border-radius: 8px 0 0 8px;
-            display: flex; align-items: center; justify-content: space-between; padding: 0 15px;
+            position: absolute; right: 0; height: 44px; border-radius: 8px; /* right:0 لأن الصفحة RTL */
+            display: flex; align-items: center; justify-content: space-between; padding: 0 15px 0 5px;
             color: #fff; font-weight: bold; font-size: 16px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); white-space: nowrap;
-            overflow: hidden; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4); white-space: nowrap;
+            overflow: hidden; border: 1px solid rgba(255,255,255,0.15);
+            background-image: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
         }
         
-        /* حماية معالجة الأسماء الطويلة جداً لعدم كسر الهيكل */
-        .race-name { 
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.9); 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-            max-width: 65%; 
+        /* 🏅 دائرة الترتيب الفخمة (الرانك) */
+        .race-details { display: flex; align-items: center; flex-grow: 1; overflow: hidden; gap: 12px; }
+        .race-rank {
+            background: rgba(0, 0, 0, 0.4); color: var(--gold);
+            min-width: 28px; height: 28px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 14px; font-weight: 900;
+            border: 1px solid var(--gold-glow); box-shadow: 0 0 10px var(--gold-glow);
         }
-        .race-score { 
-            font-family: monospace; font-size: 18px; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); font-weight: 900; 
-            z-index: 2;
-        }
+        
+        .race-name { text-shadow: 1px 1px 3px rgba(0,0,0,0.9); overflow: hidden; text-overflow: ellipsis; max-width: 70%; letter-spacing: 0.5px;}
+        .race-score { font-family: monospace; font-size: 18px; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); font-weight: 900; z-index: 2; padding-left: 10px;}
 
         @media (max-width: 768px) {
             body { padding: 0.5rem; align-items: stretch; }
             .leaderboard-container { padding: 1.5rem 1rem; border-radius: 16px; margin-top: 10px; min-height: 85vh; }
             .race-header { flex-direction: column; align-items: flex-start; }
             .race-milestone-text { font-size: 1.5rem; }
-            .race-bar { height: 35px; font-size: 13px; }
+            .race-bar { height: 38px; font-size: 13px; }
+            .race-rank { min-width: 24px; height: 24px; font-size: 12px; }
             .race-score { font-size: 14px; }
         }
     </style>
@@ -135,10 +143,10 @@
 <body>
     <div class="leaderboard-container">
         <a href="/" class="back-btn"><i class="fas fa-arrow-right"></i> العودة للصفحة الرئيسية</a>
-        <div class="header-title">📈 المسار التاريخي للـ Score التراكمي</div>
-        <div class="header-subtitle">تتبع ترتيب المدربين عبر التاريخ لكل البطولات</div>
+        <div class="header-title">📈 المسار التاريخي <span>للـ Score</span></div>
+        <div class="header-subtitle">تتبع ترتيب وتطور المدربين عبر التاريخ لكل البطولات</div>
         
-        <div id="loading-msg">جاري تحميل البيانات ورسم المسارات... ⏱️</div>
+        <div id="loading-msg">جاري تحميل البيانات ورسم المسارات... <i class="fas fa-spinner fa-spin"></i></div>
 
         <div id="filters-box" class="filters-box" style="display: none;"></div>
         
@@ -148,7 +156,7 @@
 
         <div id="race-section" style="display: none;">
             <div class="race-header">
-                <h3 style="color: var(--gold); margin: 0; font-weight: 900; font-size: 1.5rem;"><i class="fas fa-trophy"></i> سباق الترتيب الزمني</h3>
+                <h3 style="color: var(--gold); margin: 0; font-weight: 900; font-size: 1.5rem; text-shadow: 0 0 15px var(--gold-glow);"><i class="fas fa-trophy"></i> سباق الترتيب الزمني</h3>
                 
                 <div class="race-settings">
                     <select id="race-limit" class="race-select">
