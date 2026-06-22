@@ -102,13 +102,10 @@
         .bullet-list { margin-top: 10px; padding-right: 20px; line-height: 1.8; color: #cbd5e1; }
         .bullet-list li strong { color: var(--accent-color); }
 
-        /* 💎 تصميم الخواص (Chips) الفخم والمستقبلي 💎 */
+        /* تصميم الخواص (Chips) */
         .chips-container {
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 1.5rem; 
-            margin-top: 1.5rem;
-            align-items: start; /* 🛡️ السر هنا: يمنع تمدد الكروت الطويل ويخليها على مقاس المحتوى بالضبط */
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;
+            align-items: start;
         }
         .chip-card {
             background: rgba(15, 23, 42, 0.8); border: 1px solid var(--glass-border);
@@ -119,9 +116,15 @@
             padding: 1rem; font-weight: 900; font-size: 1.1rem; color: #fff; text-align: center;
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
+        
+        /* ألوان كروت الخواص */
         .chip-header.purple { background: linear-gradient(135deg, rgba(168,85,247,0.3), rgba(168,85,247,0.1)); border-bottom: 2px solid var(--purple); }
         .chip-header.gold { background: linear-gradient(135deg, rgba(251,191,36,0.3), rgba(251,191,36,0.1)); border-bottom: 2px solid var(--gold); }
         .chip-header.green { background: linear-gradient(135deg, rgba(16,185,129,0.3), rgba(16,185,129,0.1)); border-bottom: 2px solid var(--green); }
+        .chip-header.blue { background: linear-gradient(135deg, rgba(56,189,248,0.3), rgba(56,189,248,0.1)); border-bottom: 2px solid var(--accent-color); }
+        .chip-header.pink { background: linear-gradient(135deg, rgba(236,72,153,0.3), rgba(236,72,153,0.1)); border-bottom: 2px solid var(--pink); }
+        .chip-header.orange { background: linear-gradient(135deg, rgba(245,158,11,0.3), rgba(245,158,11,0.1)); border-bottom: 2px solid var(--warning); }
+        .chip-header.red { background: linear-gradient(135deg, rgba(239,68,68,0.3), rgba(239,68,68,0.1)); border-bottom: 2px solid var(--red); }
         
         .chip-body { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; gap: 1rem; }
         .chip-formula {
@@ -248,6 +251,7 @@
                 </div>
 
                 <div class="chips-container">
+                    
                     <div class="chip-card">
                         <div class="chip-header purple"><i class="fas fa-random"></i> التغيير الجذري (WC, FH, LL)</div>
                         <div class="chip-body">
@@ -256,7 +260,7 @@
                             <div class="chip-formula">$$ \frac{\text{Actual} - \text{Old Optimal}}{\text{World Max} - \text{Old Optimal}} $$</div>
                             <div style="font-size: 0.85rem; color:#ec4899; font-weight:bold; margin-top:10px;">في حال كانت الخاصية خاسرة (Actual &lt; Old):</div>
                             <div class="chip-formula">$$ \frac{\text{Actual} - \text{Old Optimal}}{\text{Old Optimal}} $$</div>
-                            <div class="edge-case"><strong>حالات خاصة:</strong> إذا كان مثالي التشكيلة القديمة (Optimal) أعلى من الأول على العالم، يكون التقييم -1. و إذا كانت نقاط التشكيلة الحالية أقل من مثالي التشكيلة القديمة و كانت سالبة يكون التقييم -1. التقييم يجب أن يكون في الفترة [-1,1].</div>
+                            <div class="edge-case"><strong>حالات خاصة:</strong> إذا كان مثالي التشكيلة القديمة (Optimal) أعلى من الأول على العالم، يكون التقييم -1. وإذا كانت نقاط التشكيلة الحالية أقل من مثالي التشكيلة القديمة وكانت سالبة يكون التقييم -1. التقييم يجب أن يكون في الفترة [-1,1].</div>
                         </div>
                     </div>
 
@@ -264,17 +268,17 @@
                         <div class="chip-header gold"><i class="fas fa-bolt"></i> المضاعفات (Triple Captain)</div>
                         <div class="chip-body">
                             <div class="rule-text" style="font-size: 0.85rem; margin:0;">تعتمد على كفاءة اختيار اللاعب لمضاعفة نقاطه مقارنة بالخيار الأمثل المتاح في تلك الفترة.</div>
-                            <div class="chip-formula">$$ \frac{\text{Actual Captain} \times 3}{\text{Best Player in Phase} \times 3} $$</div>
+                            <div class="chip-formula" style="margin-top: 10px;">$$ \frac{\text{Actual Captain} \times 3}{\text{Best Player in Phase} \times 3} $$</div>
                         </div>
                     </div>
 
                     <div class="chip-card">
                         <div class="chip-header green"><i class="fas fa-chair"></i> خواص الدكة (Bench Boost)</div>
                         <div class="chip-body">
-                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">يقيم جودة الدكة المُفعلة بالجولة مقارنةً بأعلى متوسط لنقاط الدكة حققه المدرب في تلك الفترة.</div>
-                            <div class="chip-formula">$$ \frac{\text{Actual Bench Average}}{\text{Highest Bench Average}} $$</div>
+                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">يقيم جودة الدكة المُفعلة بالجولة مقارنةً بأفضل جولة كان للمدرب فيها أعلى دكة محتملة.</div>
+                            <div class="chip-formula" style="margin-top: 10px; margin-bottom: 10px;">$$ \frac{\text{Actual Bench Points}}{\text{Highest Bench Average}} $$</div>
                             
-                            <div style="background: rgba(16, 185, 129, 0.08); border-right: 3px solid var(--green); padding: 12px; border-radius: 8px; margin-top: 10px;">
+                            <div style="background: rgba(16, 185, 129, 0.08); border-right: 3px solid var(--green); padding: 12px; border-radius: 8px; margin-top: auto;">
                                 <div style="font-size: 0.85rem; color: #6ee7b7; font-weight: bold; margin-bottom: 6px;"><i class="fas fa-calculator"></i> كيف يُحسب "متوسط الدكة" للتشكيلة؟</div>
                                 <div style="font-size: 0.8rem; color: #e2e8f0; margin-bottom: 8px; line-height: 1.6;">
                                     يُحسب بجمع أعلى نقاط دكة ممكنة مع أقل نقاط دكة ممكنة للتشكيلة، وقسمة الناتج على 2. الجولة صاحبة <u>أعلى متوسط</u> في الفترة تُعتمد كمعيار أساسي (المقام).
@@ -285,6 +289,56 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="chip-card">
+                        <div class="chip-header blue"><i class="fas fa-star-half-alt"></i> كابتن تلقائي (Maximum Captain)</div>
+                        <div class="chip-body">
+                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">تقارن متوسط أداء اللاعبين الأساسيين في الجولة المفعّلة، مع الجولة التي كان يُفترض أن تُعطي أعلى ناتج لنفس المعادلة في تلك الفترة.</div>
+                            <div class="chip-formula" style="margin-top: 10px; margin-bottom: 10px;">
+                                $$ \frac{\text{Actual Avg (Max + Min Starter)}}{\text{Highest Optimal Avg in Phase}} $$
+                            </div>
+                            <div style="background: rgba(56, 189, 248, 0.08); border-right: 3px solid var(--accent-color); padding: 12px; border-radius: 8px; margin-top: auto;">
+                                <div style="font-size: 0.85rem; color: var(--accent-color); font-weight: bold; margin-bottom: 6px;"><i class="fas fa-calculator"></i> توضيح رياضي للأساسيين:</div>
+                                <div style="font-size: 0.8rem; color: #e2e8f0; margin-bottom: 8px; line-height: 1.6;">
+                                    يُحسب بجمع أعلى لاعب أساسي نقاطاً مع أقل لاعب أساسي نقاطاً مقسوماً على 2.
+                                </div>
+                                <div class="chip-formula" style="font-size: 0.8rem; padding: 8px; border: 1px dashed rgba(56, 189, 248, 0.4); background: rgba(0,0,0,0.4); color: var(--accent-color);">
+                                    $$ \frac{\text{Max Starter} + \text{Min Starter}}{2} $$
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chip-card">
+                        <div class="chip-header pink"><i class="fas fa-user-plus"></i> اللاعب الإضافي (12th Man)</div>
+                        <div class="chip-body">
+                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">يقيس مدى نجاح اختيار اللاعب الإضافي مقارنة بأفضل خيار متاح لم يكن موجوداً في تشكيلة المدرب لتلك الجولة.</div>
+                            <div class="chip-formula" style="margin-top: auto;">
+                                $$ \frac{\text{12th Man Points}}{\text{Max Player Points (Not in Squad)}} $$
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chip-card">
+                        <div class="chip-header orange"><i class="fas fa-level-up-alt"></i> التأهل (Qualification Boost)</div>
+                        <div class="chip-body">
+                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">يقيس النقاط الصافية المستفادة من الخاصية ومقارنتها بأعلى استفادة ممكنة لو تم استخدام الخاصية في الجولة الأمثل بالمقارنة بين <strong>الأساسيين فقط</strong>.</div>
+                            <div class="chip-formula" style="margin-top: auto;">
+                                $$ \frac{\text{Actual Chip Benefit}}{\text{Max Possible Benefit (Starters)}} $$
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chip-card">
+                        <div class="chip-header red"><i class="fas fa-user-tie"></i> المدرب الأفضل (Best Manager)</div>
+                        <div class="chip-body">
+                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">خاصية تتيح اختيار <strong>"مدرب فريق حقيقي"</strong> وليس مدربي الفانتزي. يُحسب التقييم بقسمة نقاط المدرب الحقيقي في 3 جولات على أعلى نقاط ممكنة لمدرب في 3 جولات متتالية بالبطولة.</div>
+                            <div class="chip-formula" style="margin-top: auto;">
+                                $$ \frac{\text{Actual Manager Pts (3 GWs)}}{\text{Max Mngr Pts (3 Consecutive GWs)}} $$
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 
                 <div class="general-chip-note">
