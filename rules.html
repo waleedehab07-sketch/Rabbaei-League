@@ -23,6 +23,7 @@
             --pink: #ec4899;
             --green: #10b981;
             --red: #ef4444;
+            --warning: #f59e0b;
         }
 
         body {
@@ -101,7 +102,7 @@
         .bullet-list { margin-top: 10px; padding-right: 20px; line-height: 1.8; color: #cbd5e1; }
         .bullet-list li strong { color: var(--accent-color); }
 
-        /* 💎 تصميم الخواص (Chips) الفخم 💎 */
+        /* 💎 تصميم الخواص (Chips) الفخم والمستقبلي 💎 */
         .chips-container {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;
         }
@@ -128,6 +129,17 @@
             font-size: 0.85rem; color: #fca5a5; line-height: 1.6;
         }
 
+        /* بانر التنبيه العام للخواص */
+        .general-chip-note {
+            margin-top: 2rem; padding: 1.5rem; border-radius: 16px;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(0,0,0,0.2));
+            border: 1px solid rgba(245, 158, 11, 0.3); border-right: 4px solid var(--warning);
+            display: flex; align-items: flex-start; gap: 15px;
+        }
+        .general-chip-note i { color: var(--warning); font-size: 1.5rem; margin-top: 5px; }
+        .general-chip-note div h4 { margin: 0 0 5px 0; color: var(--warning); font-size: 1.1rem; font-weight: 900; }
+        .general-chip-note div p { margin: 0; color: #e2e8f0; font-size: 0.95rem; line-height: 1.6; }
+
         @media (max-width: 768px) {
             body { padding: 0.5rem; }
             .container { padding: 1.5rem 1rem; border-radius: 16px; }
@@ -135,6 +147,7 @@
             .rules-tabs { display: grid; grid-template-columns: repeat(2, 1fr); width: 100%; }
             .tab-btn { width: 100%; justify-content: center; font-size: 0.85rem; padding: 8px; text-align: center;}
             .chips-container { grid-template-columns: 1fr; }
+            .general-chip-note { flex-direction: column; align-items: center; text-align: center; }
         }
     </style>
 </head>
@@ -216,7 +229,7 @@
                 </div>
             </div>
 
-            <div class="rule-card" style="border-right-color: transparent; border: none; padding: 0; background: transparent;">
+            <div class="rule-card" style="border-right-color: transparent; border: none; padding: 0; background: transparent; box-shadow: none;">
                 <div class="rule-title" style="margin-bottom: 0;"><span>M5</span> كفاءة استخدام الخواص (Chips) المعممة لأي بطولة</div>
                 <div class="rule-text" style="margin-top: 10px;">
                     محرك التقييم يدمج الاستفادة من جميع الخواص المتوفرة في أي بطولة (الحالية أو المستقبلية ككأس العالم). يتم التقييم بناءً على نوع الخاصية، ثم يُحسب المتوسط العام للاستفادة.
@@ -262,7 +275,7 @@
                                 $$ \frac{\text{Actual Captain} \times 3}{\text{Best Player in Phase} \times 3} $$
                             </div>
 
-                            <div class="edge-case">
+                            <div class="edge-case" style="border-right-color: var(--gold); background: rgba(251, 191, 36, 0.1); color: #fde68a;">
                                 <strong>اعتبار الفترات:</strong><br>
                                 يتم حساب اللاعب الأفضل (المقام) بناءً على الفترة الزمنية (النصف الأول/الثاني)، فإذا كان هناك كرتين (Two Chips) بالموسم، يُقاس كل كرت بناءً على الفترة التي فُعّل فيها حصراً.
                             </div>
@@ -274,23 +287,31 @@
                             <i class="fas fa-chair"></i> خواص الدكة (Bench Boost)
                         </div>
                         <div class="chip-body">
-                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">يقيم جودة الدكة المُفعلة بالجولة مقارنةً بمتوسط أعلى دكة كان يمتلكها المدرب خلال نفس الفترة.</div>
+                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">يقيم جودة الدكة المُفعلة بالجولة مقارنةً بأعلى متوسط لنقاط الدكة حققه المدرب في تلك الفترة.</div>
                             
                             <div class="chip-formula" style="margin-top: auto;">
-                                $$ \frac{\text{Actual Bench Points}}{\text{Max Average Bench in Phase}} $$
+                                $$ \frac{\text{Actual Bench Points}}{\text{Highest Bench Average in Phase}} $$
                             </div>
                             
                             <div class="edge-case" style="border-right-color: var(--green); background: rgba(16, 185, 129, 0.1); color: #6ee7b7;">
-                                <strong>ملاحظة عامة لجميع الخواص:</strong><br>
-                                الخاصية المفقودة أو التي ينتهي الموسم ولم يتم استخدامها تُعطى تقييم <strong>(0.000)</strong> وتدخل في متوسط تقييم الخواص.
+                                <strong>توضيح رياضي:</strong><br>
+                                يتم حساب "متوسط نقاط الدكة" لكل تشكيلة (جولة) للمدرب في الفترة الزمنية المحددة. الجولة التي تمتلك <u>أعلى متوسط دكة</u> تعتبر هي المعيار (المقام) الذي تقارن به الجولة المُفعلة.
                             </div>
                         </div>
                     </div>
                 </div>
+                
+                <div class="general-chip-note">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <h4>قاعدة عامة لجميع الخواص</h4>
+                        <p>الخاصية المفقودة أو التي ينتهي الموسم ولم يتم استخدامها من قِبل المدرب، تُعطى تلقائياً تقييم <strong>(0.000)</strong> وتدخل ضمن حساب المتوسط العام لتقييم الخواص.</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="rule-card" style="border-right-color: var(--green); margin-top: 1.5rem;">
-                <div class="rule-title"><span style="background:rgba(16,185,129,0.1); color:var(--green);">M6</span> القيمة المالية للتشكيلة | Squad Value</div>
+            <div class="rule-card" style="border-right-color: var(--purple); margin-top: 1.5rem;">
+                <div class="rule-title"><span style="background:rgba(168,85,247,0.1); color:var(--purple);">M6</span> القيمة المالية للتشكيلة | Squad Value</div>
                 <div class="rule-text">⚠️ <strong>(تنبيه: هذا المعيار يُطبق حصرياً على الدوري الإنجليزي FPL):</strong> يقيس كفاءة المدرب الاقتصادية في تنمية الميزانية المالية الإجمالية لفريقه بنهاية الموسم.</div>
                 <div class="math-box">
                     $$ M_6 = \frac{\text{Manager Final Value} - 100}{\text{World #1 Final Value} - 100} $$
@@ -348,7 +369,7 @@
 
                 <div class="chip-card" style="border: 1px solid var(--accent-color); box-shadow: 0 5px 20px rgba(56, 189, 248, 0.15);">
                     <div class="chip-header" style="background: rgba(56, 189, 248, 0.1); border-bottom: 2px solid var(--accent-color); color: var(--accent-color);">
-                        <i class="fas fa-fire"></i> الأدوار الإقصائية (نصف النهائي / النهائي)
+                        <i class="fas fa-fire"></i> الأدوار الإقصائية (نصف النهائي / النهائي / الثالث)
                     </div>
                     <div class="chip-body">
                         <div class="rule-text" style="font-size: 0.9rem; margin:0;">
@@ -380,7 +401,6 @@
             document.getElementById(tabId).classList.add("active");
             evt.currentTarget.classList.add("active");
             
-            // إعادة تفعيل الرسم الرياضي للمعادلات عند تغيير التبويب
             if (window.MathJax) {
                 MathJax.typesetPromise();
             }
