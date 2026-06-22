@@ -102,9 +102,13 @@
         .bullet-list { margin-top: 10px; padding-right: 20px; line-height: 1.8; color: #cbd5e1; }
         .bullet-list li strong { color: var(--accent-color); }
 
-        /* تصميم الخواص (Chips) */
+        /* 💎 تصميم الخواص (Chips) الفخم والمستقبلي 💎 */
         .chips-container {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 1.5rem; 
+            margin-top: 1.5rem;
+            align-items: start; /* 🛡️ السر هنا: يمنع تمدد الكروت الطويل ويخليها على مقاس المحتوى بالضبط */
         }
         .chip-card {
             background: rgba(15, 23, 42, 0.8); border: 1px solid var(--glass-border);
@@ -123,7 +127,7 @@
         .chip-formula {
             background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; text-align: center;
             color: var(--gold); font-family: monospace; font-size: 1rem; border: 1px dashed rgba(255,255,255,0.1);
-            max-width: 100%; overflow-x: auto; 
+            max-width: 100%; overflow-x: auto; overflow-y: hidden;
             scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.2) transparent;
         }
         .edge-case {
@@ -131,7 +135,7 @@
             font-size: 0.85rem; color: #fca5a5; line-height: 1.6;
         }
 
-        /* بانر التنبيه العام للخواص المطور */
+        /* بانر التنبيه العام للخواص */
         .general-chip-note {
             margin-top: 2rem; padding: 1.5rem; border-radius: 16px;
             background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(0,0,0,0.2));
@@ -260,7 +264,7 @@
                         <div class="chip-header gold"><i class="fas fa-bolt"></i> المضاعفات (Triple Captain)</div>
                         <div class="chip-body">
                             <div class="rule-text" style="font-size: 0.85rem; margin:0;">تعتمد على كفاءة اختيار اللاعب لمضاعفة نقاطه مقارنة بالخيار الأمثل المتاح في تلك الفترة.</div>
-                            <div class="chip-formula" style="margin-top: auto;">$$ \frac{\text{Actual Captain} \times 3}{\text{Best Player in Phase} \times 3} $$</div>
+                            <div class="chip-formula">$$ \frac{\text{Actual Captain} \times 3}{\text{Best Player in Phase} \times 3} $$</div>
                         </div>
                     </div>
 
@@ -268,9 +272,9 @@
                         <div class="chip-header green"><i class="fas fa-chair"></i> خواص الدكة (Bench Boost)</div>
                         <div class="chip-body">
                             <div class="rule-text" style="font-size: 0.85rem; margin:0;">يقيم جودة الدكة المُفعلة بالجولة مقارنةً بأعلى متوسط لنقاط الدكة حققه المدرب في تلك الفترة.</div>
-                            <div class="chip-formula" style="margin-top: 10px; margin-bottom: 10px;">$$ \frac{\text{Actual Bench Average}}{\text{Highest Bench Average}} $$</div>
+                            <div class="chip-formula">$$ \frac{\text{Actual Bench Average}}{\text{Highest Bench Average}} $$</div>
                             
-                            <div style="background: rgba(16, 185, 129, 0.08); border-right: 3px solid var(--green); padding: 12px; border-radius: 8px; margin-top: auto;">
+                            <div style="background: rgba(16, 185, 129, 0.08); border-right: 3px solid var(--green); padding: 12px; border-radius: 8px; margin-top: 10px;">
                                 <div style="font-size: 0.85rem; color: #6ee7b7; font-weight: bold; margin-bottom: 6px;"><i class="fas fa-calculator"></i> كيف يُحسب "متوسط الدكة" للتشكيلة؟</div>
                                 <div style="font-size: 0.8rem; color: #e2e8f0; margin-bottom: 8px; line-height: 1.6;">
                                     يُحسب بجمع أعلى نقاط دكة ممكنة مع أقل نقاط دكة ممكنة للتشكيلة، وقسمة الناتج على 2. الجولة صاحبة <u>أعلى متوسط</u> في الفترة تُعتمد كمعيار أساسي (المقام).
