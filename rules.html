@@ -123,7 +123,7 @@
         .chip-formula {
             background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; text-align: center;
             color: var(--gold); font-family: monospace; font-size: 1rem; border: 1px dashed rgba(255,255,255,0.1);
-            max-width: 100%; overflow-x: auto; /* 🛡️ الحل الجذري لمنع المعادلة من الخروج عن الصندوق */
+            max-width: 100%; overflow-x: auto; 
             scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.2) transparent;
         }
         .edge-case {
@@ -131,7 +131,7 @@
             font-size: 0.85rem; color: #fca5a5; line-height: 1.6;
         }
 
-        /* بانر التنبيه العام للخواص */
+        /* بانر التنبيه العام للخواص المطور */
         .general-chip-note {
             margin-top: 2rem; padding: 1.5rem; border-radius: 16px;
             background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(0,0,0,0.2));
@@ -139,8 +139,10 @@
             display: flex; align-items: flex-start; gap: 15px;
         }
         .general-chip-note i { color: var(--warning); font-size: 1.5rem; margin-top: 5px; }
-        .general-chip-note div h4 { margin: 0 0 5px 0; color: var(--warning); font-size: 1.1rem; font-weight: 900; }
-        .general-chip-note div p { margin: 0; color: #e2e8f0; font-size: 0.95rem; line-height: 1.6; }
+        .general-chip-note div h4 { margin: 0 0 10px 0; color: var(--warning); font-size: 1.1rem; font-weight: 900; }
+        .general-chip-note ul { margin: 0; padding-right: 20px; color: #e2e8f0; font-size: 0.95rem; line-height: 1.8; }
+        .general-chip-note ul li { margin-bottom: 5px; }
+        .general-chip-note ul li strong { color: #fcd34d; }
 
         @media (max-width: 768px) {
             body { padding: 0.5rem; }
@@ -150,6 +152,7 @@
             .tab-btn { width: 100%; justify-content: center; font-size: 0.85rem; padding: 8px; text-align: center;}
             .chips-container { grid-template-columns: 1fr; }
             .general-chip-note { flex-direction: column; align-items: center; text-align: center; }
+            .general-chip-note ul { padding-right: 0; list-style-position: inside; }
         }
     </style>
 </head>
@@ -249,7 +252,7 @@
                             <div class="chip-formula">$$ \frac{\text{Actual} - \text{Old Optimal}}{\text{World Max} - \text{Old Optimal}} $$</div>
                             <div style="font-size: 0.85rem; color:#ec4899; font-weight:bold; margin-top:10px;">في حال كانت الخاصية خاسرة (Actual &lt; Old):</div>
                             <div class="chip-formula">$$ \frac{\text{Actual} - \text{Old Optimal}}{\text{Old Optimal}} $$</div>
-                            <div class="edge-case"><strong>حالات خاصة:</strong> إذا كان مثالي التشكيلة القديمة (Optimal) أعلى من الأول على العالم، يكون التقييم -1. و إذا كانت نقاط التشكيلة الحالية أقل من مثالي التشكيلة القديمة و كانت سالبة يكون التقييم -1. التقييم يجب أن يكون في الفترة [-1,1]. </div>
+                            <div class="edge-case"><strong>حالات خاصة:</strong> إذا كان مثالي التشكيلة القديمة (Optimal) أعلى من الأول على العالم، يكون التقييم -1. و إذا كانت نقاط التشكيلة الحالية أقل من مثالي التشكيلة القديمة و كانت سالبة يكون التقييم -1. التقييم يجب أن يكون في الفترة [-1,1].</div>
                         </div>
                     </div>
 
@@ -257,8 +260,7 @@
                         <div class="chip-header gold"><i class="fas fa-bolt"></i> المضاعفات (Triple Captain)</div>
                         <div class="chip-body">
                             <div class="rule-text" style="font-size: 0.85rem; margin:0;">تعتمد على كفاءة اختيار اللاعب لمضاعفة نقاطه مقارنة بالخيار الأمثل المتاح في تلك الفترة.</div>
-                            <div class="chip-formula" style="margin-top: 10px;">$$ \frac{\text{Actual Captain} \times 3}{\text{Best Player in Phase} \times 3} $$</div>
-                            <div class="edge-case" style="border-right-color: var(--gold); background: rgba(251, 191, 36, 0.1); color: #fde68a; margin-top: auto;"><strong>اعتبار الفترات:</strong> يتم حساب اللاعب الأفضل بناءً على الفترة الزمنية، فإذا كان هناك كرتين بالموسم، يُقاس كل كرت بناءً على فترته المحددة حصراً.</div>
+                            <div class="chip-formula" style="margin-top: auto;">$$ \frac{\text{Actual Captain} \times 3}{\text{Best Player in Phase} \times 3} $$</div>
                         </div>
                     </div>
 
@@ -282,10 +284,13 @@
                 </div>
                 
                 <div class="general-chip-note">
-                    <i class="fas fa-exclamation-triangle"></i>
+                    <i class="fas fa-layer-group"></i>
                     <div>
-                        <h4>قاعدة عامة لجميع الخواص</h4>
-                        <p>الخاصية المفقودة أو التي ينتهي الموسم ولم يتم استخدامها من قِبل المدرب، تُعطى تلقائياً تقييم <strong>(0.000)</strong> وتدخل ضمن حساب المتوسط العام لتقييم الخواص.</p>
+                        <h4>قواعد عامة لجميع الخواص</h4>
+                        <ul>
+                            <li><strong>الخواص المفقودة:</strong> الخاصية التي ينتهي الموسم ولم يتم استخدامها، تُعطى تقييم <strong>(0.000)</strong> وتدخل ضمن حساب المتوسط العام للاستفادة.</li>
+                            <li><strong>اعتبار الفترات:</strong> يتم القياس وحساب المعيار الأفضل بناءً على الفترة الزمنية، فإذا كان هناك كرتين بالموسم من نفس الخاصية، يُقاس كل كرت بناءً على <u>فترته المحددة حصراً</u>.</li>
+                        </ul>
                     </div>
                 </div>
             </div>
