@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ملف المدرب | دوري رباعي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg-color: #0b0f19;
@@ -25,9 +26,9 @@
             padding: 3rem; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
         }
         .back-btn {
-            display: inline-block; margin-bottom: 2rem;
+            display: inline-flex; align-items: center; gap: 8px; margin-bottom: 2rem;
             color: #38bdf8; text-decoration: none; font-weight: 700;
-            border: 1px solid #38bdf8; padding: 8px 16px; border-radius: 8px; transition: 0.3s;
+            border: 1px solid #38bdf8; padding: 8px 16px; border-radius: 8px; transition: 0.3s; background: rgba(56, 189, 248, 0.05);
         }
         .back-btn:hover { background: #38bdf8; color: #0b0f19; transform: translateX(5px); }
         
@@ -41,125 +42,52 @@
         .medal-item { display: flex; flex-direction: column; font-size: 1.2rem; font-weight: 700; }
         .medal-item span { font-size: 2.5rem; margin-bottom: 8px; }
 
-        /* 🏆 القسم الجديد: السجل التاريخي (بدون تمرير داخلي) */
-        .history-section {
-            margin-top: 3.5rem;
-            border-top: 1px solid var(--glass-border);
-            padding-top: 2.5rem;
+        .history-section { margin-top: 3.5rem; border-top: 1px solid var(--glass-border); padding-top: 2.5rem; text-align: right; }
+        
+        .history-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 15px;
         }
-        .history-section h3 {
-            color: #fbbf24; text-align: center; font-weight: 900; font-size: 1.5rem; margin-bottom: 2rem;
-        }
+        .history-header h3 { color: #fbbf24; font-weight: 900; font-size: 1.5rem; margin: 0; }
+        
+        .history-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
 
-        /* شبكة البطاقات (Grid System) */
-        .history-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.5rem;
-            text-align: right;
-        }
-
-        /* تصميم بطاقة الموسم */
         .season-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border);
+            border-radius: 16px; padding: 1.5rem; transition: transform 0.3s ease, border-color 0.3s ease;
         }
-        .season-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.04);
-            border-color: rgba(56, 189, 248, 0.3);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
+        .season-card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.04); border-color: rgba(56, 189, 248, 0.3); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
 
-        /* عنوان الموسم داخل البطاقة */
         .season-header {
-            color: #38bdf8;
-            font-size: 1.3rem;
-            font-weight: 900;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 0.8rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            color: #38bdf8; font-size: 1.3rem; font-weight: 900;
+            border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.8rem; margin-bottom: 1rem;
+            display: flex; align-items: center; gap: 8px;
         }
 
-        /* سطر البطولة داخل بطاقة الموسم */
         .t-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.8rem 0;
-            border-bottom: 1px dashed rgba(255,255,255,0.05);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.8rem 0; border-bottom: 1px dashed rgba(255,255,255,0.05);
         }
         .t-item:last-child { border-bottom: none; padding-bottom: 0; }
         
         .t-name { font-weight: 700; color: #fff; font-size: 1.05rem; }
         .t-stats { display: flex; gap: 1rem; align-items: center; }
-        .t-points { 
-            color: #e2e8f0; font-weight: bold; font-size: 0.9rem; 
-            background: rgba(255, 255, 255, 0.05); padding: 4px 10px; border-radius: 6px; 
-        }
+        .t-points { color: #e2e8f0; font-weight: bold; font-size: 0.9rem; background: rgba(255, 255, 255, 0.05); padding: 4px 10px; border-radius: 6px; }
         .t-rank-badge { font-size: 1.1rem; font-weight: 900; }
 
-        /* =========================================
-           تنسيقات الجوال الاحترافية لصفحة البروفايل (النسخة المدمجة)
-           ========================================= */
         @media (max-width: 768px) {
             body { padding: 0.5rem; }
             .profile-card { padding: 1.5rem 1rem; border-radius: 16px; margin-top: 1rem; }
-            .back-btn { margin-bottom: 1.5rem; padding: 6px 12px; font-size: 0.9rem; }
-            
-            .coach-icon { font-size: 4rem; margin-bottom: 0.5rem; }
-            .coach-name { font-size: 1.8rem; }
-            
-            .medals-box { 
-                flex-wrap: wrap; 
-                gap: 15px; 
-                padding: 1rem; 
-                border-radius: 12px;
-            }
+            .history-header { flex-direction: column; align-items: stretch; text-align: center; }
+            .history-header a { justify-content: center; }
+            .medals-box { flex-wrap: wrap; gap: 15px; padding: 1rem; border-radius: 12px; }
             .medal-item { width: 40%; font-size: 1rem; }
-            .medal-item span { font-size: 1.8rem; }
-
-            .history-section { margin-top: 2rem; padding-top: 1.5rem; }
-            .history-section h3 { font-size: 1.3rem; margin-bottom: 1.5rem; }
-            
             .history-grid { grid-template-columns: 1fr; gap: 1rem; }
-            .season-card { padding: 1rem; }
-            .season-header { font-size: 1.1rem; }
-            
-            /* رجعناها سطر واحد، بس صغرنا المسافات والخطوط شوي عشان يكفي */
-            .t-item { 
-                display: flex;
-                flex-direction: row; 
-                justify-content: space-between;
-                align-items: center;
-                gap: 5px; /* تقليل المسافة بين الاسم والإحصائيات */
-                padding: 0.8rem 0;
-            }
-            .t-name { font-size: 0.85rem; } /* تصغير اسم البطولة لتوفير مساحة */
-            .t-stats { 
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                gap: 6px; /* تقليل المسافة بين النقاط والترتيب والزر */
-            }
+            .t-item { flex-direction: row; gap: 5px; padding: 0.8rem 0; }
+            .t-name { font-size: 0.85rem; } 
+            .t-stats { gap: 6px; }
             .t-points { font-size: 0.75rem; padding: 2px 5px; }
             .t-rank-badge { font-size: 0.95rem; }
-            
-            /* تصغير الزر بنسبة 15% عشان ما يدف الترتيب */
-            .t-stats button, .t-stats a {
-                padding: 4px 8px;
-                font-size: 0.75rem;
-                white-space: nowrap;
-                transform: scale(0.85); /* السحر هنا */
-                transform-origin: left center; /* عشان يصغر لجهة اليسار وما يزعج اللي جنبه */
-                margin: 0;
-            }
+            .t-stats button, .t-stats a { padding: 4px 8px; font-size: 0.75rem; white-space: nowrap; transform: scale(0.85); transform-origin: left center; margin: 0; }
         }
     </style>
 </head>
@@ -167,9 +95,32 @@
 <body>
 
     <div class="profile-card" id="profile-content">
+        <div style="text-align: right;">
+            <a href="/" class="back-btn"><i class="fas fa-arrow-right"></i> العودة للصفحة الرئيسية</a>
+        </div>
+        
         <h3 style="color:#38bdf8; text-align:center;">جاري جلب بيانات المدرب من قاعدة البيانات... ⏱️</h3>
+        
+        <div class="history-section" style="display: none;" id="history-section-wrapper">
+            <div class="history-header">
+                <h3>السجل التاريخي والبطولات</h3>
+                <a href="/rules.html" style="background: rgba(251, 191, 36, 0.1); border: 1px solid #fbbf24; color: #fbbf24; border-radius: 12px; padding: 8px 18px; font-weight: 900; font-size: 0.95rem; text-decoration: none; transition: 0.3s; display: flex; align-items: center; gap: 8px;"
+                   onmouseover="this.style.background='#fbbf24'; this.style.color='#000';" 
+                   onmouseout="this.style.background='rgba(251, 191, 36, 0.1)'; this.style.color='#fbbf24';">
+                    <i class="fas fa-balance-scale"></i> معايير جائزة أفضل مدرب
+                </a>
+            </div>
+            <div id="tournaments-container" class="history-grid"></div>
+        </div>
     </div>
 
     <script type="module" src="/src/profile.ts"></script>
+    
+    <script>
+        setTimeout(() => {
+            const historyWrapper = document.getElementById('history-section-wrapper');
+            if(historyWrapper) historyWrapper.style.display = 'block';
+        }, 1500);
+    </script>
 </body>
 </html>
