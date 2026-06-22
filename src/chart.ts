@@ -69,7 +69,6 @@ function buildChart(managers: any[], results: any[]) {
   const ChartJS = (window as any).Chart;
   if (!ChartJS) return;
 
-  // الترتيب الزمني الصارم المعتمد
   const milestoneOrder = [
     '2018 World Cup',
     '2018/2019 Premier League',
@@ -277,7 +276,7 @@ function buildChart(managers: any[], results: any[]) {
   });
 
   // =========================================
-  // 🏁 محرك سباق الأعمدة المطور (انطلاق من الصفر) 🏁
+  // 🏁 محرك سباق الأعمدة المطور مع شارة الترتيب الفخمة 🏁
   // =========================================
   initRaceEngine(sortedManagers, managerScores, labels, hueStep);
 }
@@ -294,7 +293,6 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
 
     if (!raceBarsContainer || !milestoneDisplay || !playBtn || !pauseBtn || !replayBtn || !speedSelect || !limitSelect) return;
 
-    // بناء الهيكل التراكمي للبدء من الصفر المطلق في الجولة 0
     const raceLabels = ['بداية التحدي 🏁', ...origLabels];
     const raceScores: { [id: string]: number[] } = {};
     
@@ -302,16 +300,16 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
         raceScores[id] = [0, ...(origManagerScores[id] || [])];
     });
 
-    const BAR_HEIGHT_SPACING = 50; 
+    const BAR_HEIGHT_SPACING = 55; // زيادة بسيطة عشان الشارة تاخذ مساحة مريحة
     let currentStep = 0;
     let raceTimeout: any;
     let isPlaying = false;
 
     const barElements = new Map<string, HTMLDivElement>();
     const barScoreElements = new Map<string, HTMLSpanElement>();
+    const barRankElements = new Map<string, HTMLSpanElement>();
     const currentDisplayScores = new Map<string, number>();
 
-    // عداد تصاعدي ذكي للأرقام الماتش داي بنعومة الـ Frames
     function animateValue(obj: HTMLSpanElement, start: number, end: number, duration: number) {
         let startTimestamp: number | null = null;
         const step = (timestamp: number) => {
@@ -327,32 +325,42 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
         window.requestAnimationFrame(step);
     }
 
-    // بناء وتوليد عناصر الـ HTML للأعمدة
     sortedManagers.forEach(([id, data], index) => {
         const hue = Math.floor(index * hueStep * 2.5) % 360;
-        const color = `hsl(${hue}, 85%, 55%)`;
+        const color = `hsl(${hue}, 85%, 50%)`;
 
         const bar = document.createElement('div');
         bar.className = 'race-bar';
         bar.style.backgroundColor = color;
-        bar.style.width = '12%'; 
+        bar.style.width = '14%'; 
         bar.style.transform = `translateY(${(index * BAR_HEIGHT_SPACING) + 60}px)`; 
         bar.style.opacity = '1';
+
+        const detailsDiv = document.createElement('div');
+        detailsDiv.className = 'race-details';
+
+        const rankSpan = document.createElement('span');
+        rankSpan.className = 'race-rank';
+        rankSpan.textContent = '-'; 
 
         const nameSpan = document.createElement('span');
         nameSpan.className = 'race-name';
         nameSpan.textContent = data.name;
 
+        detailsDiv.appendChild(rankSpan);
+        detailsDiv.appendChild(nameSpan);
+
         const scoreSpan = document.createElement('span');
         scoreSpan.className = 'race-score';
         scoreSpan.textContent = '0.000';
 
-        bar.appendChild(nameSpan);
+        bar.appendChild(detailsDiv);
         bar.appendChild(scoreSpan);
         raceBarsContainer.appendChild(bar);
 
         barElements.set(id, bar);
         barScoreElements.set(id, scoreSpan);
+        barRankElements.set(id, rankSpan);
         currentDisplayScores.set(id, 0);
     });
 
@@ -369,8 +377,7 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
         const displayLimit = parseInt(limitSelect.value) || 999;
         const visibleCount = Math.min(stepScores.length, displayLimit);
         
-        // حماية مساحة التنفس السفلية لمنع الاختفاء
-        raceBarsContainer.style.height = `${(visibleCount * BAR_HEIGHT_SPACING) + 100}px`; 
+        raceBarsContainer.style.height = `${(visibleCount * BAR_HEIGHT_SPACING) + 120}px`; 
 
         let maxScore = stepScores[0].score;
         if (maxScore === 0) maxScore = 1;
@@ -382,6 +389,7 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
         stepScores.forEach((item, rank) => {
             const bar = barElements.get(item.id)!;
             const scoreSpan = barScoreElements.get(item.id)!;
+            const rankSpan = barRankElements.get(item.id)!;
             const oldScore = currentDisplayScores.get(item.id)!;
 
             if (rank < displayLimit) {
@@ -389,10 +397,23 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
                 bar.style.pointerEvents = 'auto';
                 
                 let widthPercent = (item.score / maxScore) * 100;
-                if (widthPercent < 12) widthPercent = 12; 
+                if (widthPercent < 14) widthPercent = 14; 
 
                 bar.style.width = `${widthPercent}%`;
                 bar.style.transform = `translateY(${(rank * BAR_HEIGHT_SPACING) + 60}px)`; 
+                
+                // تحديث رقم الترتيب
+                rankSpan.textContent = (rank + 1).toString();
+                
+                // إضافة لون خاص للمركز الأول
+                if (rank === 0) {
+                    rankSpan.style.background = 'var(--gold)';
+                    rankSpan.style.color = '#000';
+                } else {
+                    rankSpan.style.background = 'rgba(0, 0, 0, 0.4)';
+                    rankSpan.style.color = 'var(--gold)';
+                }
+
             } else {
                 bar.style.opacity = '0';
                 bar.style.pointerEvents = 'none';
@@ -457,7 +478,6 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
 
     limitSelect.addEventListener('change', () => { if (!isPlaying) renderRaceStep(Math.max(0, currentStep - 1), 300); });
     
-    // نقطة الصفر الفورية للاستعداد
     setTimeout(() => renderRaceStep(0, 0), 100);
 }
 
