@@ -8,6 +8,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/polyfill/v3/polyfill.min.js?features=es6"></script>
+    
+    <script>
+        MathJax = {
+            chtml: {
+                scale: 0.9, /* تصغير المعادلات بنسبة 10% لتناسب الصناديق */
+                displayAlign: 'center',
+                displayIndent: '0'
+            }
+        };
+    </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
@@ -79,7 +89,7 @@
         .tab-content.active { display: block; animation: fadeIn 0.4s ease-in-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* كروت المعايير */
+        /* كروت المعايير الأساسية */
         .rule-card {
             background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-border);
             border-radius: 16px; padding: 1.5rem 2rem; margin-bottom: 1.5rem;
@@ -89,35 +99,36 @@
         .rule-title span { color: var(--accent-color); font-family: monospace; font-size: 1rem; background: rgba(56, 189, 248, 0.1); padding: 2px 8px; border-radius: 6px; font-weight: bold;}
         .rule-text { color: #cbd5e1; font-size: 0.95rem; line-height: 1.8; text-align: justify; }
         
+        /* 🛡️ إخفاء السكرول في المعادلات الأساسية */
         .math-box {
             background: rgba(255, 255, 255, 0.01); border: 1px dashed rgba(255, 255, 255, 0.1);
-            padding: 1.2rem; border-radius: 12px; text-align: center; color: var(--gold);
-            overflow-x: auto; margin-top: 1rem; font-size: 1.1rem;
+            padding: 1rem; border-radius: 12px; text-align: center; color: var(--gold);
+            margin-top: 1rem; font-size: 1rem; overflow: hidden; /* تدمير السكرول */
         }
+        .math-box::-webkit-scrollbar { display: none; } /* إخفاء تماماً */
 
-        .math-caption {
-            text-align: center; color: #94a3b8; font-size: 0.9rem; margin-top: 8px; font-family: monospace;
-        }
-
+        .math-caption { text-align: center; color: #94a3b8; font-size: 0.9rem; margin-top: 8px; font-family: monospace; }
         .bullet-list { margin-top: 10px; padding-right: 20px; line-height: 1.8; color: #cbd5e1; }
         .bullet-list li strong { color: var(--accent-color); }
 
-        /* تصميم الخواص (Chips) */
+        /* 💎 تصميم الخواص (Chips) بنظام Masonry لمنع الفراغات 💎 */
         .chips-container {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;
-            align-items: start;
+            column-count: 3; /* تقسيم الشاشة لـ 3 أعمدة أوتوماتيكياً */
+            column-gap: 1.5rem;
+            margin-top: 1.5rem;
         }
         .chip-card {
             background: rgba(15, 23, 42, 0.8); border: 1px solid var(--glass-border);
             border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            break-inside: avoid; /* يمنع الكرت من الانقسام بين عمودين */
+            margin-bottom: 1.5rem; /* الفراغ تحت الكرت */
         }
         .chip-header {
             padding: 1rem; font-weight: 900; font-size: 1.1rem; color: #fff; text-align: center;
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         
-        /* ألوان كروت الخواص */
         .chip-header.purple { background: linear-gradient(135deg, rgba(168,85,247,0.3), rgba(168,85,247,0.1)); border-bottom: 2px solid var(--purple); }
         .chip-header.gold { background: linear-gradient(135deg, rgba(251,191,36,0.3), rgba(251,191,36,0.1)); border-bottom: 2px solid var(--gold); }
         .chip-header.green { background: linear-gradient(135deg, rgba(16,185,129,0.3), rgba(16,185,129,0.1)); border-bottom: 2px solid var(--green); }
@@ -126,21 +137,23 @@
         .chip-header.orange { background: linear-gradient(135deg, rgba(245,158,11,0.3), rgba(245,158,11,0.1)); border-bottom: 2px solid var(--warning); }
         .chip-header.red { background: linear-gradient(135deg, rgba(239,68,68,0.3), rgba(239,68,68,0.1)); border-bottom: 2px solid var(--red); }
         
-        .chip-body { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; gap: 1rem; }
+        .chip-body { padding: 1.2rem; display: flex; flex-direction: column; gap: 1rem; }
+        
+        /* 🛡️ إخفاء السكرول تماماً داخل الكروت وتصغير الفونت قليلاً */
         .chip-formula {
             background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; text-align: center;
-            color: var(--gold); font-family: monospace; font-size: 1rem; border: 1px dashed rgba(255,255,255,0.1);
-            max-width: 100%; overflow-x: auto; overflow-y: hidden;
-            scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.2) transparent;
+            color: var(--gold); font-size: 0.85rem; border: 1px dashed rgba(255,255,255,0.1);
+            overflow: hidden; /* لا سكرول أبداً */
+            display: flex; justify-content: center; align-items: center;
         }
+        
         .edge-case {
             background: rgba(239, 68, 68, 0.1); border-right: 3px solid var(--red); padding: 10px; border-radius: 8px;
             font-size: 0.85rem; color: #fca5a5; line-height: 1.6;
         }
 
-        /* بانر التنبيه العام للخواص */
         .general-chip-note {
-            margin-top: 2rem; padding: 1.5rem; border-radius: 16px;
+            margin-top: 1rem; padding: 1.5rem; border-radius: 16px;
             background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(0,0,0,0.2));
             border: 1px solid rgba(245, 158, 11, 0.3); border-right: 4px solid var(--warning);
             display: flex; align-items: flex-start; gap: 15px;
@@ -149,15 +162,17 @@
         .general-chip-note div h4 { margin: 0 0 10px 0; color: var(--warning); font-size: 1.1rem; font-weight: 900; }
         .general-chip-note ul { margin: 0; padding-right: 20px; color: #e2e8f0; font-size: 0.95rem; line-height: 1.8; }
         .general-chip-note ul li { margin-bottom: 5px; }
-        .general-chip-note ul li strong { color: #fcd34d; }
 
+        @media (max-width: 992px) {
+            .chips-container { column-count: 2; }
+        }
         @media (max-width: 768px) {
             body { padding: 0.5rem; }
             .container { padding: 1.5rem 1rem; border-radius: 16px; }
             .page-title { font-size: 1.6rem; }
             .rules-tabs { display: grid; grid-template-columns: repeat(2, 1fr); width: 100%; }
             .tab-btn { width: 100%; justify-content: center; font-size: 0.85rem; padding: 8px; text-align: center;}
-            .chips-container { grid-template-columns: 1fr; }
+            .chips-container { column-count: 1; }
             .general-chip-note { flex-direction: column; align-items: center; text-align: center; }
             .general-chip-note ul { padding-right: 0; list-style-position: inside; }
         }
@@ -187,13 +202,13 @@
                     <br><br>🛡️ <strong>شرط الترشح والـ Eligibility (ابتداءً من موسم 2023/2024):</strong> لا يدخل في الفرز النهائي أو قائمة الترشح لجائزة أفضل مدرب إلا المدربين الذين نجحوا في تحقيق <strong>بطولة واحدة على الأقل</strong> خلال الموسم الجاري.
                 </div>
                 <div class="math-box">
-                    $$ \text{Total Season Score} = \frac{\sum_{i=1}^{M} \text{Tournament Score}_{i}}{\text{Total Tournaments in Season (M)}} $$
+                    $$ \text{Total Season Score} = \frac{\sum_{i=1}^{M} \text{Tournament Score}_{i}}{\text{Total Tournaments (M)}} $$
                 </div>
             </div>
         </div>
 
         <div id="classic-tab" class="tab-content">
-            <p class="rule-text" style="margin-bottom:1.5rem;"><i class="fas fa-info-circle" style="color:var(--accent-color)"></i> هذا النظام المعياري يُطبق على <strong>كافة البطولات الكلاسيكية العامة</strong> المعتمدة على تجميع النقاط (مثل: الدوري الإنجليزي، دوري الأبطال، كأس العالم، واليورو). المتغير <span style="color:var(--gold); font-weight:bold;">N</span> في المعادلات يمثل العدد الكلي لجولات البطولة المعنية.</p>
+            <p class="rule-text" style="margin-bottom:1.5rem;"><i class="fas fa-info-circle" style="color:var(--accent-color)"></i> هذا النظام يُطبق على <strong>كافة البطولات الكلاسيكية</strong> (مثل: الدوري الإنجليزي، الأبطال، كأس العالم). المتغير <span style="color:var(--gold); font-weight:bold;">N</span> يمثل العدد الكلي لجولات البطولة.</p>
 
             <div class="rule-card" style="border-right-color: var(--accent-color);">
                 <div class="rule-title"><i class="fas fa-magic"></i> كيفية حساب التشكيلة المثالية للجولة | Optimal Lineup Concept</div>
@@ -213,7 +228,7 @@
                 <div class="rule-title"><span>M1</span> كفاءة اتخاذ القرار | Decision Efficiency</div>
                 <div class="rule-text">نسبة النقاط الصافية التي حققها المدرب فعلياً مقارنةً بالنقاط التي كان يمكن تحقيقها لو دخل بالجولة بالتشكيلة المثالية (بعد خصم قواطع السالب).</div>
                 <div class="math-box">
-                    $$ M_1 = \frac{\sum_{gw=1}^{N} (\text{Actual Points}_{gw} - \text{Hits}_{gw})}{\sum_{gw=1}^{N} (\text{Optimal Points}_{gw} - \text{Hits}_{gw})} $$
+                    $$ M_1 = \frac{\sum_{i=1}^{N} (\text{Actual Pts}_{i} - \text{Hits}_{i})}{\sum_{i=1}^{N} (\text{Optimal Pts}_{i} - \text{Hits}_{i})} $$
                 </div>
             </div>
 
@@ -221,7 +236,7 @@
                 <div class="rule-title"><span>M2</span> إنجاز النقاط | Points Achievement</div>
                 <div class="rule-text">معدل الفجوة بين نقاط المدرب الإجمالية ونقاط المتصدر رقم 1 على مستوى العالم لتلك البطولة بالتحديد.</div>
                 <div class="math-box">
-                    $$ M_2 = \frac{\text{Manager Total Points}}{\text{Tournament World Rank #1 Points}} $$
+                    $$ M_2 = \frac{\text{Manager Total Pts}}{\text{World Rank #1 Pts}} $$
                 </div>
             </div>
 
@@ -229,12 +244,12 @@
                 <div class="rule-title"><span>M3</span> نجاح الانتقالات | Transfers Efficiency</div>
                 <div class="rule-text">مقياس نجاح البيع والشراء؛ الأرباح (نقاط القادمين) مقابل الخسائر (نقاط المغادرين + تكلفة السالب) طوال فترة البطولة.</div>
                 <div class="math-box">
-                    $$ M_3 = \frac{\sum \text{Transfer Profits}}{\sum \text{Transfer Profits} + \sum |\text{Transfer Losses}|} $$
+                    $$ M_3 = \frac{\sum \text{Profits}}{\sum \text{Profits} + \sum |\text{Losses}|} $$
                 </div>
             </div>
 
             <div class="rule-card">
-                <div class="rule-title"><span>M4</span> الاستمرارية | Consistency (Phases)</div>
+                <div class="rule-title"><span>M4</span> الاستمرارية | Consistency</div>
                 <div class="rule-text">يقيس استمرارية المدرب في المنافسة وصدارة الفترات الزمنية (Phases) للبطولة.</div>
                 <div class="math-box">
                     $$ M_4 = \frac{\text{Phases Won (Rank 1)}}{\text{Total Tournament Phases}} $$
@@ -244,9 +259,9 @@
             <div class="rule-card" style="border-right-color: transparent; border: none; padding: 0; background: transparent; box-shadow: none;">
                 <div class="rule-title" style="margin-bottom: 0;"><span>M5</span> كفاءة استخدام الخواص (Chips) المعممة لأي بطولة</div>
                 <div class="rule-text" style="margin-top: 10px;">
-                    محرك التقييم يدمج الاستفادة من جميع الخواص المتوفرة في أي بطولة (الحالية أو المستقبلية). يتم التقييم بناءً على نوع الخاصية، ثم يُحسب المتوسط العام للاستفادة.
-                    <div class="math-box" style="margin-bottom: 1rem; border-color: rgba(255,255,255,0.2);">
-                        $$ M_5 = \text{Average}\left( \text{Average Score per Chip Type} \right) $$
+                    محرك التقييم يدمج الاستفادة من جميع الخواص المتوفرة في أي بطولة. يتم التقييم بناءً على نوع الخاصية، ثم يُحسب المتوسط العام للاستفادة.
+                    <div class="math-box" style="margin-bottom: 0; border-color: rgba(255,255,255,0.2);">
+                        $$ M_5 = \text{Avg}\left( \text{Avg Score per Chip} \right) $$
                     </div>
                 </div>
 
@@ -256,11 +271,11 @@
                         <div class="chip-header purple"><i class="fas fa-random"></i> التغيير الجذري (WC, FH, LL)</div>
                         <div class="chip-body">
                             <div class="rule-text" style="font-size: 0.85rem; margin:0;">يقيس نجاح الخاصية بمقارنة الفريق الجديد مع ما كان سيحققه الفريق القديم لو لم يتم تفعيل الخاصية.</div>
-                            <div style="font-size: 0.85rem; color:#a855f7; font-weight:bold; margin-top:10px;">في حال كانت الخاصية رابحة (Actual > Old):</div>
-                            <div class="chip-formula">$$ \frac{\text{Actual} - \text{Old Optimal}}{\text{World Max} - \text{Old Optimal}} $$</div>
-                            <div style="font-size: 0.85rem; color:#ec4899; font-weight:bold; margin-top:10px;">في حال كانت الخاصية خاسرة (Actual &lt; Old):</div>
-                            <div class="chip-formula">$$ \frac{\text{Actual} - \text{Old Optimal}}{\text{Old Optimal}} $$</div>
-                            <div class="edge-case"><strong>حالات خاصة:</strong> إذا كان مثالي التشكيلة القديمة (Optimal) أعلى من الأول على العالم، يكون التقييم -1. وإذا كانت نقاط التشكيلة الحالية أقل من مثالي التشكيلة القديمة وكانت سالبة يكون التقييم -1. التقييم يجب أن يكون في الفترة [-1,1].</div>
+                            <div style="font-size: 0.85rem; color:#a855f7; font-weight:bold; margin-top:10px;">رابحة (Actual > Old):</div>
+                            <div class="chip-formula">$$ \frac{\text{Actual} - \text{Old Opt}}{\text{World Max} - \text{Old Opt}} $$</div>
+                            <div style="font-size: 0.85rem; color:#ec4899; font-weight:bold; margin-top:10px;">خاسرة (Actual &lt; Old):</div>
+                            <div class="chip-formula">$$ \frac{\text{Actual} - \text{Old Opt}}{\text{Old Opt}} $$</div>
+                            <div class="edge-case"><strong>حالات خاصة:</strong> التقييم يحدد في نطاق [-1,1]. إذا كانت نقاط التشكيلة القديمة أعلى من الأول على العالم، أو النقاط الحالية أقل من القديمة وسالبة يكون التقييم -1.</div>
                         </div>
                     </div>
 
@@ -268,23 +283,23 @@
                         <div class="chip-header gold"><i class="fas fa-bolt"></i> المضاعفات (Triple Captain)</div>
                         <div class="chip-body">
                             <div class="rule-text" style="font-size: 0.85rem; margin:0;">تعتمد على كفاءة اختيار اللاعب لمضاعفة نقاطه مقارنة بالخيار الأمثل المتاح في تلك الفترة.</div>
-                            <div class="chip-formula" style="margin-top: 10px;">$$ \frac{\text{Actual Captain} \times 3}{\text{Best Player in Phase} \times 3} $$</div>
+                            <div class="chip-formula">$$ \frac{\text{Actual Captain} \times 3}{\text{Best Phase Player} \times 3} $$</div>
                         </div>
                     </div>
 
                     <div class="chip-card">
                         <div class="chip-header green"><i class="fas fa-chair"></i> خواص الدكة (Bench Boost)</div>
                         <div class="chip-body">
-                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">يقيم جودة الدكة المُفعلة بالجولة مقارنةً بأفضل جولة كان للمدرب فيها أعلى دكة محتملة.</div>
-                            <div class="chip-formula" style="margin-top: 10px; margin-bottom: 10px;">$$ \frac{\text{Actual Bench Points}}{\text{Highest Bench Average}} $$</div>
+                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">يقيم جودة الدكة المُفعلة بالجولة مقارنةً بأعلى متوسط لنقاط الدكة حققه المدرب في تلك الفترة.</div>
+                            <div class="chip-formula">$$ \frac{\text{Actual Bench Pts}}{\text{Highest Bench Avg}} $$</div>
                             
-                            <div style="background: rgba(16, 185, 129, 0.08); border-right: 3px solid var(--green); padding: 12px; border-radius: 8px; margin-top: auto;">
-                                <div style="font-size: 0.85rem; color: #6ee7b7; font-weight: bold; margin-bottom: 6px;"><i class="fas fa-calculator"></i> كيف يُحسب "متوسط الدكة" للتشكيلة؟</div>
+                            <div style="background: rgba(16, 185, 129, 0.08); border-right: 3px solid var(--green); padding: 12px; border-radius: 8px; margin-top: 10px;">
+                                <div style="font-size: 0.85rem; color: #6ee7b7; font-weight: bold; margin-bottom: 6px;"><i class="fas fa-calculator"></i> كيف يُحسب "متوسط الدكة"؟</div>
                                 <div style="font-size: 0.8rem; color: #e2e8f0; margin-bottom: 8px; line-height: 1.6;">
-                                    يُحسب بجمع أعلى نقاط دكة ممكنة مع أقل نقاط دكة ممكنة للتشكيلة، وقسمة الناتج على 2. الجولة صاحبة <u>أعلى متوسط</u> في الفترة تُعتمد كمعيار أساسي (المقام).
+                                    يُحسب بجمع أعلى نقاط دكة مع أقل نقاط دكة للتشكيلة، وقسمة الناتج على 2. الجولة صاحبة <u>أعلى متوسط</u> في الفترة هي المعيار (المقام).
                                 </div>
-                                <div class="chip-formula" style="font-size: 0.8rem; padding: 8px; border: 1px dashed rgba(16, 185, 129, 0.4); background: rgba(0,0,0,0.4);">
-                                    $$ \text{Avg} = \frac{\text{Max Bench} + \text{Min Bench}}{2} $$
+                                <div class="chip-formula" style="font-size: 0.8rem; padding: 5px; border-color: rgba(16, 185, 129, 0.4);">
+                                    $$ \frac{\text{Max Bench} + \text{Min Bench}}{2} $$
                                 </div>
                             </div>
                         </div>
@@ -293,16 +308,14 @@
                     <div class="chip-card">
                         <div class="chip-header blue"><i class="fas fa-star-half-alt"></i> كابتن تلقائي (Maximum Captain)</div>
                         <div class="chip-body">
-                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">تقارن متوسط أداء اللاعبين الأساسيين في الجولة المفعّلة، مع الجولة التي كان يُفترض أن تُعطي أعلى ناتج لنفس المعادلة في تلك الفترة.</div>
-                            <div class="chip-formula" style="margin-top: 10px; margin-bottom: 10px;">
-                                $$ \frac{\text{Actual Avg (Max + Min Starter)}}{\text{Highest Optimal Avg in Phase}} $$
+                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">تقارن أداء اللاعبين الأساسيين بالجولة המُفعّلة، مع الجولة الأمثل في نفس الفترة.</div>
+                            <div class="chip-formula">
+                                $$ \frac{\text{Actual Avg (Starters)}}{\text{Max Optimal Avg}} $$
                             </div>
-                            <div style="background: rgba(56, 189, 248, 0.08); border-right: 3px solid var(--accent-color); padding: 12px; border-radius: 8px; margin-top: auto;">
-                                <div style="font-size: 0.85rem; color: var(--accent-color); font-weight: bold; margin-bottom: 6px;"><i class="fas fa-calculator"></i> توضيح رياضي للأساسيين:</div>
-                                <div style="font-size: 0.8rem; color: #e2e8f0; margin-bottom: 8px; line-height: 1.6;">
-                                    يُحسب بجمع أعلى لاعب أساسي نقاطاً مع أقل لاعب أساسي نقاطاً مقسوماً على 2.
-                                </div>
-                                <div class="chip-formula" style="font-size: 0.8rem; padding: 8px; border: 1px dashed rgba(56, 189, 248, 0.4); background: rgba(0,0,0,0.4); color: var(--accent-color);">
+                            <div style="background: rgba(56, 189, 248, 0.08); border-right: 3px solid var(--accent-color); padding: 12px; border-radius: 8px; margin-top: 10px;">
+                                <div style="font-size: 0.85rem; color: var(--accent-color); font-weight: bold; margin-bottom: 6px;"><i class="fas fa-calculator"></i> توضيح للأساسيين:</div>
+                                <div style="font-size: 0.8rem; color: #e2e8f0; margin-bottom: 8px; line-height: 1.6;">يُحسب بجمع أعلى وأقل لاعب أساسي نقاطاً مقسوماً على 2.</div>
+                                <div class="chip-formula" style="font-size: 0.8rem; padding: 5px; border-color: rgba(56, 189, 248, 0.4); color: var(--accent-color);">
                                     $$ \frac{\text{Max Starter} + \text{Min Starter}}{2} $$
                                 </div>
                             </div>
@@ -312,29 +325,29 @@
                     <div class="chip-card">
                         <div class="chip-header pink"><i class="fas fa-user-plus"></i> اللاعب الإضافي (12th Man)</div>
                         <div class="chip-body">
-                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">يقيس مدى نجاح اختيار اللاعب الإضافي مقارنة بأفضل خيار متاح لم يكن موجوداً في تشكيلة المدرب لتلك الجولة.</div>
-                            <div class="chip-formula" style="margin-top: auto;">
-                                $$ \frac{\text{12th Man Points}}{\text{Max Player Points (Not in Squad)}} $$
+                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">مدى نجاح اختيار اللاعب الإضافي مقارنة بأفضل خيار متاح لم يكن موجوداً في تشكيلة المدرب.</div>
+                            <div class="chip-formula">
+                                $$ \frac{\text{12th Man Pts}}{\text{Max Pts (Not in Squad)}} $$
                             </div>
                         </div>
                     </div>
 
                     <div class="chip-card">
-                        <div class="chip-header orange"><i class="fas fa-level-up-alt"></i> التأهل (Qualification Boost)</div>
+                        <div class="chip-header orange"><i class="fas fa-level-up-alt"></i> التأهل (Qualify Boost)</div>
                         <div class="chip-body">
-                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">يقيس النقاط الصافية المستفادة من الخاصية ومقارنتها بأعلى استفادة ممكنة لو تم استخدام الخاصية في الجولة الأمثل بالمقارنة بين <strong>الأساسيين فقط</strong>.</div>
-                            <div class="chip-formula" style="margin-top: auto;">
-                                $$ \frac{\text{Actual Chip Benefit}}{\text{Max Possible Benefit (Starters)}} $$
+                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">النقاط الصافية المستفادة مقارنة بأعلى استفادة ممكنة بالجولة الأمثل (بالمقارنة بين الأساسيين فقط).</div>
+                            <div class="chip-formula">
+                                $$ \frac{\text{Actual Benefit}}{\text{Max Benefit (Starters)}} $$
                             </div>
                         </div>
                     </div>
 
                     <div class="chip-card">
-                        <div class="chip-header red"><i class="fas fa-user-tie"></i> المدرب الأفضل (Best Manager)</div>
+                        <div class="chip-header red"><i class="fas fa-user-tie"></i> المدرب الأفضل (Best Mngr)</div>
                         <div class="chip-body">
-                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">خاصية تتيح اختيار <strong>"مدرب فريق حقيقي"</strong> وليس مدربي الفانتزي. يُحسب التقييم بقسمة نقاط المدرب الحقيقي في 3 جولات على أعلى نقاط ممكنة لمدرب في 3 جولات متتالية بالبطولة.</div>
-                            <div class="chip-formula" style="margin-top: auto;">
-                                $$ \frac{\text{Actual Manager Pts (3 GWs)}}{\text{Max Mngr Pts (3 Consecutive GWs)}} $$
+                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">خاصية مخصصة لاختيار مدرب فريق حقيقي. تُقاس بقسمة نقاطه في 3 جولات على أعلى نقاط ممكنة لمدرب متوفر في 3 جولات متتالية.</div>
+                            <div class="chip-formula">
+                                $$ \frac{\text{Actual Mngr Pts (3 GWs)}}{\text{Max Pts (3 GWs)}} $$
                             </div>
                         </div>
                     </div>
@@ -346,8 +359,8 @@
                     <div>
                         <h4>قواعد عامة لجميع الخواص</h4>
                         <ul>
-                            <li><strong>الخواص المفقودة:</strong> الخاصية التي ينتهي الموسم ولم يتم استخدامها، تُعطى تقييم <strong>(0.000)</strong> وتدخل ضمن حساب المتوسط العام للاستفادة.</li>
-                            <li><strong>اعتبار الفترات:</strong> يتم القياس وحساب المعيار الأفضل بناءً على الفترة الزمنية، فإذا كان هناك كرتين بالموسم من نفس الخاصية، يُقاس كل كرت بناءً على <u>فترته المحددة حصراً</u>.</li>
+                            <li><strong>الخواص المفقودة:</strong> الخاصية التي ينتهي الموسم ولم تُستخدم، تُعطى <strong>(0.000)</strong> وتدخل في المتوسط.</li>
+                            <li><strong>الكرت المتكرر:</strong> إذا وُجد كرتين من نفس الخاصية، يُقاس كل كرت بناءً على <u>فترته الزمنية حصراً</u>.</li>
                         </ul>
                     </div>
                 </div>
@@ -355,26 +368,26 @@
 
             <div class="rule-card" style="border-right-color: var(--purple); margin-top: 1.5rem;">
                 <div class="rule-title"><span style="background:rgba(168,85,247,0.1); color:var(--purple);">M6</span> القيمة المالية للتشكيلة | Squad Value</div>
-                <div class="rule-text">⚠️ <strong>(تنبيه: هذا المعيار يُطبق حصرياً على الدوري الإنجليزي FPL):</strong> يقيس كفاءة المدرب الاقتصادية في تنمية الميزانية المادية الإجمالية لفريقه بنهاية الموسم.</div>
+                <div class="rule-text">⚠️ <strong>(تنبيه: حصرياً للدوري الإنجليزي FPL):</strong> يقيس كفاءة المدرب الاقتصادية في تنمية الميزانية.</div>
                 <div class="math-box">
-                    $$ M_6 = \frac{\text{Manager Final Value} - 100}{\text{World #1 Final Value} - 100} $$
+                    $$ M_6 = \frac{\text{Manager Final Value} - 100}{\text{World #1 Value} - 100} $$
                 </div>
             </div>
 
             <div class="rule-card">
                 <div class="rule-title"><span>M7</span> التصنيف العالمي | Global Rank</div>
-                <div class="rule-text">درجة صريحة تعكس ترتيب المدرب النهائي مقارنة بالعدد الكلي لمدربي العالم المشاركين بالبطولة ذاتها.</div>
+                <div class="rule-text">درجة صريحة تعكس الترتيب النهائي للمدرب مقارنة بالعدد الكلي للمشاركين.</div>
                 <div class="math-box">
-                    $$ M_7 = 1 - \left(\frac{\text{Manager Global Rank}}{\text{Total Tournament Participants}}\right) $$
+                    $$ M_7 = 1 - \left(\frac{\text{Manager Rank}}{\text{Total Participants}}\right) $$
                 </div>
             </div>
         </div>
 
         <div id="h2h-tab" class="tab-content">
             <div class="rule-card" style="border-right-color: var(--pink);">
-                <div class="rule-title" style="color:var(--pink)"><i class="fas fa-calendar-alt"></i> دوري الهيد تو هيد المستقل | H2H League Score</div>
+                <div class="rule-title" style="color:var(--pink)"><i class="fas fa-calendar-alt"></i> دوري الهيد تو هيد المستقل | H2H Score</div>
                 <div class="rule-text">
-                    تُحسب هذه البطولة بشكل مستقل كلياً لأنها تمتد على مدار <strong>38 جولة</strong> للموسم. يرتكز التقييم على تجميع النقاط الكلاسيكي للمواجهات المباشرة (3 نقاط للفوز، 1 للتعادل، 0 للخسارة)، وتُقسّم على أقصى نقاط ممكنة طوال الـ 38 جولة.
+                    بطولة مستقلة تمتد على مدار <strong>38 جولة</strong> للموسم. يرتكز التقييم على تجميع النقاط الكلاسيكي للمواجهات المباشرة، مقسوماً على أقصى نقاط ممكنة.
                 </div>
                 <div class="math-box">
                     $$ \text{H2H Final Score} = \frac{(\text{Wins} \times 3) + (\text{Draws} \times 1)}{3 \times 38} $$
@@ -386,23 +399,24 @@
             <div class="rule-card" style="border-right-color: var(--gold);">
                 <div class="rule-title" style="color:var(--gold)"><i class="fas fa-trophy"></i> التقييم النهائي للكأس | Final Cup Score</div>
                 <div class="rule-text">
-                    يُحسب التقييم النهائي للكؤوس الإقصائية (مثل كأس رباعي) كمتوسط لتقييم جميع الأدوار (المجموعات والأدوار الإقصائية الملعوبة). 
-                    <br><br>💡 <strong>ملاحظة الإقصاء:</strong> في الدور الذي لا يتم التأهل منه يكون التقييم 0.000                </div>
+                    يُحسب كمتوسط لتقييم جميع الأدوار. 
+                    <br><br>💡 <strong>ملاحظة الإقصاء:</strong> في الدور الذي لا يتم التأهل منه، يكون التقييم 0.000                
+                </div>
                 <div class="math-box">
-                    $$ \text{Total Cup Score} = \frac{\text{Round 1 Score} + \text{Semi-Final Score} + \text{Final / 3rd Match Score}}{\text{Total Rounds (3)}} $$
+                    $$ \text{Total Cup Score} = \frac{\text{Round 1} + \text{Semi-Final} + \text{Final / 3rd Match}}{\text{Total Rounds (3)}} $$
                 </div>
             </div>
 
-            <div class="chips-container" style="margin-top: 1rem;">
+            <div class="chips-container" style="margin-top: 1rem; column-count: 2;">
                 <div class="chip-card" style="border: 1px solid var(--pink); box-shadow: 0 5px 20px rgba(236, 72, 153, 0.15);">
                     <div class="chip-header" style="background: rgba(236, 72, 153, 0.1); border-bottom: 2px solid var(--pink); color: var(--pink);">
                         <i class="fas fa-users"></i> الدور الأول (المجموعات)
                     </div>
                     <div class="chip-body">
                         <div class="rule-text" style="font-size: 0.9rem; margin:0;">
-                            يُحسب بنظام النقاط المباشرة والمواجهات الكلاسيكية تماماً مثل الدوري، ولكن يتم حسابه وتقسيمه على عدد الجولات المخصصة لفترة الدور الأول المحددة في الأرشيف (مثلاً 6 جولات).
+                            يُحسب بنظام المواجهات الكلاسيكية، مقسوماً على عدد الجولات المخصصة لفترة الدور الأول (مثلاً 6 جولات).
                         </div>
-                        <div class="chip-formula" style="margin-top: auto; font-size: 0.95rem;">
+                        <div class="chip-formula" style="margin-top: auto;">
                             $$ \frac{(\text{Wins} \times 3) + (\text{Draws} \times 1)}{3 \times \text{Round 1 GWs}} $$
                         </div>
                     </div>
@@ -410,14 +424,14 @@
 
                 <div class="chip-card" style="border: 1px solid var(--accent-color); box-shadow: 0 5px 20px rgba(56, 189, 248, 0.15);">
                     <div class="chip-header" style="background: rgba(56, 189, 248, 0.1); border-bottom: 2px solid var(--accent-color); color: var(--accent-color);">
-                        <i class="fas fa-fire"></i> الأدوار الإقصائية (نصف النهائي / النهائي / مباراة الثالث والرابع)
+                        <i class="fas fa-fire"></i> الأدوار الإقصائية (نصف ونهائي)
                     </div>
                     <div class="chip-body">
                         <div class="rule-text" style="font-size: 0.9rem; margin:0;">
-                            يتم التقييم بنسبة وتناسب؛ نقاط المدرب الكلية في فترة الجولات المخصصة للدور الإقصائي، مقسومة على أقصى نقاط جولة حقيقية تم تسجيلها على مستوى اللعبة عالمياً (Global Highest Score) <u>خلال تلك الفترة من الجولات وتحديداً في فترتها الزمنية المحددة للكأس</u>.
+                            نقاط المدرب الكلية في فترة الجولة المخصصة، مقسومة على أقصى نقاط جولة حقيقية سُجلت عالمياً <u>خلال نفس الفترة</u>.
                         </div>
                         <div class="chip-formula" style="margin-top: auto; border-color: var(--accent-color); color: #fff;">
-                            $$ \frac{\text{Manager Points in Round Period}}{\text{Max Global Points in Round Period}} $$
+                            $$ \frac{\text{Manager Points}}{\text{Max Global Points in Period}} $$
                         </div>
                     </div>
                 </div>
@@ -429,21 +443,15 @@
     <script>
         function switchTab(evt, tabId) {
             const tabContents = document.getElementsByClassName("tab-content");
-            for (let i = 0; i < tabContents.length; i++) {
-                tabContents[i].classList.remove("active");
-            }
+            for (let i = 0; i < tabContents.length; i++) { tabContents[i].classList.remove("active"); }
 
             const tabButtons = document.getElementsByClassName("tab-btn");
-            for (let i = 0; i < tabButtons.length; i++) {
-                tabButtons[i].classList.remove("active");
-            }
+            for (let i = 0; i < tabButtons.length; i++) { tabButtons[i].classList.remove("active"); }
 
             document.getElementById(tabId).classList.add("active");
             evt.currentTarget.classList.add("active");
             
-            if (window.MathJax) {
-                MathJax.typesetPromise();
-            }
+            if (window.MathJax) { MathJax.typesetPromise(); }
         }
     </script>
 </body>
