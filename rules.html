@@ -247,7 +247,7 @@
                             <div class="chip-formula">$$ \frac{\text{Actual} - \text{Old Optimal}}{\text{World Max} - \text{Old Optimal}} $$</div>
                             <div style="font-size: 0.85rem; color:#ec4899; font-weight:bold; margin-top:10px;">في حال كانت الخاصية خاسرة (Actual &lt; Old):</div>
                             <div class="chip-formula">$$ \frac{\text{Actual} - \text{Old Optimal}}{\text{Old Optimal}} $$</div>
-                            <div class="edge-case"><strong>حالات خاصة:</strong> إذا كان مثالي التشكيلة القديمة أعلى من الأول على العالم، يتم معالجة المقام لضمان الاستقرار الحسابي. التقييم لا يقل عن (-1.0).</div>
+                            <div class="edge-case"><strong>حالات خاصة:</strong> إذا كان مثالي التشكيلة القديمة (Optimal) أعلى من الأول على العالم، يكون التقييم -1. التقييم يجب أن يكون في الفترة [-1,1]. </div>
                         </div>
                     </div>
 
