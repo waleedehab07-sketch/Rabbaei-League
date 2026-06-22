@@ -277,23 +277,30 @@ function buildChart(managers: any[], results: any[]) {
   });
 
   // =========================================
-  // 🏁 محرك سباق الأعمدة المطور (Constant Linear Speed + Animated Counter) 🏁
+  // 🏁 محرك سباق الأعمدة المطور (انطلاق من الصفر المطلق) 🏁
   // =========================================
   initRaceEngine(sortedManagers, managerScores, labels, hueStep);
 }
 
-function initRaceEngine(sortedManagers: any[], managerScores: any, labels: string[], hueStep: number) {
+function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabels: string[], hueStep: number) {
     const raceBarsContainer = document.getElementById('race-bars');
     const milestoneDisplay = document.getElementById('race-milestone-display');
     const playBtn = document.getElementById('race-play');
     const pauseBtn = document.getElementById('race-pause');
     const replayBtn = document.getElementById('race-replay');
     
-    // خيارات الإعدادات الجديدة
     const speedSelect = document.getElementById('race-speed') as HTMLSelectElement;
     const limitSelect = document.getElementById('race-limit') as HTMLSelectElement;
 
     if (!raceBarsContainer || !milestoneDisplay || !playBtn || !pauseBtn || !replayBtn || !speedSelect || !limitSelect) return;
+
+    // 🔧 بناء مصفوفات "محرك السباق" لتبدأ من الصفر تماماً
+    const raceLabels = ['بداية التحدي', ...origLabels];
+    const raceScores: { [id: string]: number[] } = {};
+    
+    sortedManagers.forEach(([id, data]) => {
+        raceScores[id] = [0, ...(origManagerScores[id] || [])];
+    });
 
     const BAR_HEIGHT_SPACING = 50; 
     let currentStep = 0;
@@ -328,8 +335,8 @@ function initRaceEngine(sortedManagers: any[], managerScores: any, labels: strin
         const bar = document.createElement('div');
         bar.className = 'race-bar';
         bar.style.backgroundColor = color;
-        bar.style.width = '0%';
-        bar.style.transform = `translateY(${index * BAR_HEIGHT_SPACING}px)`; 
+        bar.style.width = '12%'; // مساحة افتراضية صغيرة لاحتواء الاسم عند الصفر
+        bar.style.transform = `translateY(${(index * BAR_HEIGHT_SPACING) + 60}px)`; 
         bar.style.opacity = '1';
 
         const nameSpan = document.createElement('span');
@@ -350,24 +357,22 @@ function initRaceEngine(sortedManagers: any[], managerScores: any, labels: strin
     });
 
     function renderRaceStep(step: number, duration: number) {
-        milestoneDisplay.innerHTML = labels[step].replace(' ', '<br>');
+        milestoneDisplay.innerHTML = raceLabels[step].replace(' ', '<br>');
 
         let stepScores: { id: string, score: number, name: string }[] = [];
         sortedManagers.forEach(([id, data]) => {
-            stepScores.push({ id, score: managerScores[id][step] || 0, name: data.name });
+            stepScores.push({ id, score: raceScores[id][step] || 0, name: data.name });
         });
 
         stepScores.sort((a, b) => b.score - a.score);
 
-        // تعديل طول الحاوية بناءً على عدد المدربين الظاهرين (الفلتر)
         const displayLimit = parseInt(limitSelect.value) || 999;
         const visibleCount = Math.min(stepScores.length, displayLimit);
-        raceBarsContainer.style.height = `${(visibleCount * BAR_HEIGHT_SPACING) + 60}px`; // +60 مساحة لاسم البطولة فوق
+        raceBarsContainer.style.height = `${(visibleCount * BAR_HEIGHT_SPACING) + 60}px`; 
 
         let maxScore = stepScores[0].score;
         if (maxScore === 0) maxScore = 1;
 
-        // تطبيق الانتقال (Linear) ليطابق الفيديو
         barElements.forEach(bar => {
             bar.style.transition = `transform ${duration}ms linear, width ${duration}ms linear, opacity 0.5s ease`;
         });
@@ -380,19 +385,18 @@ function initRaceEngine(sortedManagers: any[], managerScores: any, labels: strin
             if (rank < displayLimit) {
                 bar.style.opacity = '1';
                 bar.style.pointerEvents = 'auto';
+                
                 let widthPercent = (item.score / maxScore) * 100;
-                if (widthPercent < 15) widthPercent = 15; 
+                // احتواء الاسم عند الانطلاق من الصفر
+                if (widthPercent < 12) widthPercent = 12; 
 
                 bar.style.width = `${widthPercent}%`;
-                // إضافة مسافة الـ 60 بكسل العلوية الخاصة بالنص
                 bar.style.transform = `translateY(${(rank * BAR_HEIGHT_SPACING) + 60}px)`; 
             } else {
-                // إخفاء الأعمدة اللي خارج الفلتر
                 bar.style.opacity = '0';
                 bar.style.pointerEvents = 'none';
             }
 
-            // تشغيل حركة الأرقام الخفية (Counter)
             animateValue(scoreSpan, oldScore, item.score, duration);
             currentDisplayScores.set(item.id, item.score);
         });
@@ -402,12 +406,11 @@ function initRaceEngine(sortedManagers: any[], managerScores: any, labels: strin
 
     function runNextStep() {
         if (!isPlaying) return;
-        if (currentStep >= labels.length) {
+        if (currentStep >= raceLabels.length) {
             pauseRace();
             return;
         }
 
-        // جلب السرعة الحالية المحددة من الإعدادات
         let currentDuration = parseInt(speedSelect.value) || 1000;
         
         renderRaceStep(currentStep, currentDuration); 
@@ -418,7 +421,7 @@ function initRaceEngine(sortedManagers: any[], managerScores: any, labels: strin
     }
 
     function playRace() {
-        if (currentStep >= labels.length) currentStep = 0; 
+        if (currentStep >= raceLabels.length) currentStep = 0; 
         isPlaying = true;
         playBtn.style.display = 'none';
         pauseBtn.style.display = 'inline-flex';
@@ -436,7 +439,6 @@ function initRaceEngine(sortedManagers: any[], managerScores: any, labels: strin
         pauseRace();
         currentStep = 0;
         
-        // تصفير سريع للعدادات والأعمدة
         barElements.forEach(bar => {
             bar.style.transition = `transform 300ms ease, width 300ms ease, opacity 0.3s ease`;
         });
@@ -452,10 +454,9 @@ function initRaceEngine(sortedManagers: any[], managerScores: any, labels: strin
     pauseBtn.addEventListener('click', pauseRace);
     replayBtn.addEventListener('click', replayRace);
 
-    // إذا غيّر المستخدم السرعة أو الفلتر وهو موقف، نحدّث الشاشة
     limitSelect.addEventListener('change', () => { if (!isPlaying) renderRaceStep(Math.max(0, currentStep - 1), 300); });
     
-    // تجهيز المشهد الأول (الجولة 0) فور تحميل الصفحة بسرعة (بدون أنيميشن طويل)
+    // 🏁 نقطة الصفر الفعلية فور التحميل
     setTimeout(() => renderRaceStep(0, 0), 100);
 }
 
