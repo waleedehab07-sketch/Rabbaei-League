@@ -17,6 +17,8 @@
             --glass-border: rgba(255, 255, 255, 0.08);
             --accent-color: #38bdf8;
             --gold: #fbbf24;
+            --pink: #ec4899;
+            --green: #10b981;
         }
 
         body {
@@ -27,7 +29,7 @@
         }
 
         .container {
-            width: 100%; max-width: 1000px;
+            width: 100%; max-width: 1100px;
             background: var(--glass-bg); backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border); border-radius: 24px;
             padding: 3rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
@@ -42,13 +44,21 @@
         .back-btn:hover { background: var(--accent-color); color: #0b0f19; transform: translateX(5px); }
 
         .page-title {
-            text-align: center; color: var(--gold); font-size: 2.2rem; font-weight: 900;
+            text-align: center; color: var(--gold); font-size: 2.5rem; font-weight: 900;
             margin-bottom: 0.5rem; text-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
         }
         .page-desc {
             text-align: center; color: #94a3b8; font-size: 1.1rem; margin-bottom: 3rem;
-            line-height: 1.6;
+            line-height: 1.8;
         }
+
+        /* تنسيقات الأقسام */
+        .section-header {
+            display: flex; align-items: center; gap: 12px; margin-top: 4rem; margin-bottom: 2rem;
+            padding-bottom: 1rem; border-bottom: 2px solid var(--glass-border);
+        }
+        .section-header h2 { margin: 0; font-size: 1.8rem; font-weight: 900; color: #fff; }
+        .section-header i { font-size: 2rem; }
 
         .rule-card {
             background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-border);
@@ -56,7 +66,7 @@
             border-right: 4px solid var(--accent-color);
             transition: transform 0.3s ease;
         }
-        .rule-card:hover { transform: translateY(-3px); border-color: rgba(56, 189, 248, 0.3); }
+        .rule-card:hover { transform: translateY(-3px); border-color: rgba(56, 189, 248, 0.3); box-shadow: 0 10px 20px rgba(0,0,0,0.3);}
 
         .rule-title {
             display: flex; align-items: center; gap: 10px;
@@ -69,18 +79,22 @@
         .math-box {
             background: rgba(255, 255, 255, 0.02); border: 1px dashed rgba(255, 255, 255, 0.1);
             padding: 1.5rem; border-radius: 12px; text-align: center; color: var(--gold);
-            overflow-x: auto;
+            overflow-x: auto; margin-top: 1rem;
         }
 
-        .weight-badge {
-            display: inline-block; margin-top: 1rem; font-size: 0.9rem; font-weight: bold;
-            color: #10b981; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(16, 185, 129, 0.3);
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(0,0,0,0.2));
+            border: 1px solid rgba(251, 191, 36, 0.3); border-right: 4px solid var(--gold);
+            border-radius: 16px; padding: 2rem; margin-bottom: 3rem; text-align: center;
         }
+        .highlight-box h3 { color: var(--gold); font-size: 1.6rem; margin-top: 0; margin-bottom: 1rem; font-weight: 900; }
+        .highlight-box p { font-size: 1.1rem; line-height: 1.8; color: #e2e8f0; margin-bottom: 0;}
 
         @media (max-width: 768px) {
             body { padding: 0.5rem; }
             .container { padding: 1.5rem; border-radius: 16px; }
             .page-title { font-size: 1.8rem; }
+            .section-header h2 { font-size: 1.4rem; }
             .rule-card { padding: 1.2rem; }
             .rule-title { font-size: 1.2rem; }
             .math-box { font-size: 0.9rem; padding: 1rem; }
@@ -92,81 +106,120 @@
     <div class="container">
         <a href="/" class="back-btn"><i class="fas fa-arrow-right"></i> العودة للرئيسية</a>
         
-        <h1 class="page-title"><i class="fas fa-balance-scale"></i> الدليل الرسمي لتقييم المدربين</h1>
+        <h1 class="page-title"><i class="fas fa-balance-scale"></i> الدليل الرسمي للتقييم</h1>
         <p class="page-desc">
-            لضمان أعلى معايير الشفافية والمصداقية في "دوري رباعي"، نضع بين أيديكم القواعد والمعادلات الرياضية المُعتمدة برمجياً لحساب نقاط جائزة "أفضل مدرب". يتم الحساب بناءً على الخوارزمية التالية:
+            نضع بين أيديكم القواعد الشاملة والمعادلات الرياضية المُعتمدة برمجياً لحساب نقاط جائزة "أفضل مدرب" وباقي البطولات في دوري رباعي، لضمان أعلى معايير الشفافية.
         </p>
+
+        <div class="highlight-box">
+            <h3><i class="fas fa-trophy"></i> التقييم النهائي (جائزة أفضل مدرب)</h3>
+            <p>
+                يتم حساب التقييم النهائي لجائزة "أفضل مدرب في الموسم" عن طريق دمج النقاط المُحصلة من جميع البطولات التي شارك فيها المدرب. يتم جمع نتائج التقييم لكل بطولة وتحويلها إلى درجة نهائية (Score) تعكس أداء المدرب الشامل طوال الموسم.
+            </p>
+            <div class="math-box" style="border-color: rgba(251, 191, 36, 0.5);">
+                $$ \text{Total Score} = \sum (\text{Scores of All Participated Tournaments}) $$
+            </div>
+        </div>
+
+        <div class="section-header" style="color: var(--accent-color); border-bottom-color: rgba(56, 189, 248, 0.3);">
+            <i class="fas fa-futbol"></i>
+            <h2>نظام تقييم الدوري الإنجليزي (FPL)</h2>
+        </div>
+        <p class="rule-text">يتم تقييم المدرب في بطولة الفانتزي الإنجليزي بناءً على عدة معايير دقيقة تحسب كفاءته في إدارة الفريق طوال 38 جولة:</p>
 
         <div class="rule-card">
             <div class="rule-title"><span>M1</span> كفاءة اتخاذ القرار (Decision Efficiency)</div>
             <div class="rule-text">
-                يقيس هذا المعيار مدى دقة المدرب في اختيار التشكيلة الأساسية والكابتن من بين جميع اللاعبين المتاحين في فريقه، مقارنةً بالنقاط "المثالية" التي كان من الممكن تحقيقها لو اختار التشكيلة الأفضل في تلك الجولة (بعد خصم نقاط السالب).
+                يقيس مدى دقة المدرب في اختيار التشكيلة الأساسية والكابتن مقارنةً بالنقاط "المثالية" التي كان من الممكن تحقيقها في الجولة.
             </div>
             <div class="math-box">
-                $$ M_1 = \frac{\sum_{gw=1}^{N} (\text{Actual Points}_{gw} - \text{Hits}_{gw})}{\sum_{gw=1}^{N} (\text{Optimal Max Points}_{gw} - \text{Hits}_{gw})} $$
+                $$ M_1 = \frac{\sum (\text{Actual Points}_{gw} - \text{Hits}_{gw})}{\sum (\text{Optimal Points}_{gw} - \text{Hits}_{gw})} $$
             </div>
         </div>
 
         <div class="rule-card">
             <div class="rule-title"><span>M2</span> إنجاز النقاط (Points Achievement)</div>
-            <div class="rule-text">
-                يقارن الأداء الإجمالي للمدرب في نهاية الموسم بأداء المصنف "رقم 1 عالمياً" في اللعبة، لتحديد مدى قرب المدرب من القمة العالمية.
-            </div>
+            <div class="rule-text">يقارن الأداء الإجمالي للمدرب بأداء المصنف "رقم 1 عالمياً" لتحديد مدى قربه من القمة.</div>
             <div class="math-box">
-                $$ M_3 = \frac{\text{Manager Total Points}}{\text{World Rank #1 Points}} $$
+                $$ M_2 = \frac{\text{Manager Total Points}}{\text{World Rank #1 Points}} $$
             </div>
         </div>
 
         <div class="rule-card">
             <div class="rule-title"><span>M3</span> نجاح الانتقالات (Transfers Efficiency)</div>
-            <div class="rule-text">
-                يعتمد هذا المعيار على تحليل صفقات البيع والشراء التي أجراها المدرب خلال الموسم. يحسب إجمالي "الأرباح" (النقاط التي جلبها اللاعبون الجدد) مقابل "الخسائر" (النقاط التي حققها اللاعبون المباعون + تكلفة الخصم).
-            </div>
+            <div class="rule-text">يحلل صفقات البيع والشراء. يُحسب بجمع النقاط التي جلبها اللاعبون الجدد مقابل النقاط التي حققها اللاعبون المباعون مخصوماً منها تكلفة السالب.</div>
             <div class="math-box">
-                $$ M_4 = \frac{\sum \text{Transfer Profits}}{\sum \text{Transfer Profits} + \sum |\text{Transfer Losses}|} $$
+                $$ M_3 = \frac{\sum \text{Profits}}{\sum \text{Profits} + \sum |\text{Losses}|} $$
             </div>
         </div>
 
         <div class="rule-card">
             <div class="rule-title"><span>M4</span> مدرب الشهر (Manager of the Month)</div>
-            <div class="rule-text">
-                يقيس قدرة المدرب على السيطرة وتصدر الأشهر (Phases) خلال الموسم مقارنةً بباقي مدربي الدوري.
-            </div>
+            <div class="rule-text">يقيس قدرة المدرب على تصدر الأشهر (Phases) خلال الموسم مقارنةً بباقي مدربي الدوري.</div>
             <div class="math-box">
-                $$ M_5 = \frac{\text{Months Won (Rank 1)}}{\text{Total Completed Months}} $$
+                $$ M_4 = \frac{\text{Months Won (Rank 1)}}{\text{Total Completed Months}} $$
             </div>
         </div>
 
         <div class="rule-card">
             <div class="rule-title"><span>M5</span> كفاءة استخدام الخواص (Chips Efficiency)</div>
-            <div class="rule-text">
-                تحليل رياضي لمدى استفادة المدرب من الخواص المتاحة (Wildcard, Free Hit, Bench Boost, Triple Captain). يتم حساب الاستفادة الصافية لكل خاصية مقارنةً بما كان سيحققه فريقه القديم.
-            </div>
+            <div class="rule-text">تحليل الاستفادة الصافية من كل خاصية (Wildcard, Free Hit, Bench Boost, Triple Captain) مقارنة بما كان سيحققه الفريق القديم. *المفقود يُحسب صفر.</div>
             <div class="math-box">
-                $$ M_6 = \frac{1}{4} \sum \left( \frac{\text{Chip Net Benefit}}{\text{Maximum Possible Benefit in GW}} \right) $$
-            </div>
-            <div style="text-align: center; color: #64748b; font-size: 0.85rem; margin-top: 10px;">
-                * المفقود من الخواص أو غير المستخدم يُحسب كـ صفر (0.000) في المتوسط العام.
+                $$ M_5 = \frac{1}{4} \sum \left( \frac{\text{Chip Net Benefit}}{\text{Max Possible Benefit}} \right) $$
             </div>
         </div>
 
-        <div class="rule-card" style="border-right-color: #10b981;">
-            <div class="rule-title"><span style="background: rgba(16, 185, 129, 0.1); color: #10b981;">M6</span> القيمة المالية للفريق (Squad Value)</div>
-            <div class="rule-text">
-                معيار خاص بالدوري الإنجليزي (FPL) فقط. يقيس قدرة المدرب على تنمية ميزانية فريقه خلال الموسم.
-            </div>
+        <div class="rule-card">
+            <div class="rule-title"><span>M6</span> القيمة المالية للفريق (Squad Value)</div>
+            <div class="rule-text">يقيس قدرة المدرب على تنمية ميزانية فريقه خلال الموسم.</div>
             <div class="math-box">
-                $$ M_7 = \min\left(1.0, \frac{\text{Manager Final Value} - 100}{\text{Global Max Value} - 100}\right) $$
+                $$ M_6 = \min\left(1.0, \frac{\text{Manager Final Value} - 100}{\text{Global Max Value} - 100}\right) $$
             </div>
         </div>
 
-        <div class="rule-card" style="border-right-color: #10b981;">
-            <div class="rule-title"><span style="background: rgba(16, 185, 129, 0.1); color: #10b981;">M7</span> التصنيف العالمي (Global Rank Inverse)</div>
-            <div class="rule-text">
-                الترتيب المعكوس للمدرب على مستوى العالم، بحيث كلما اقترب المدرب من المركز الأول، اقتربت نتيجة المعادلة من 1.0 (الدرجة الكاملة).
-            </div>
+        <div class="rule-card">
+            <div class="rule-title"><span>M7</span> التصنيف العالمي (Global Rank Inverse)</div>
+            <div class="rule-text">الترتيب المعكوس للمدرب عالمياً؛ كلما اقترب من المركز الأول اقتربت النتيجة من 1.0.</div>
             <div class="math-box">
-                $$ M_8 = \max\left(0, 1 - \frac{\text{Manager Global Rank}}{\text{Total Global Managers}}\right) $$
+                $$ M_7 = \max\left(0, 1 - \frac{\text{Manager Global Rank}}{\text{Total Global Managers}}\right) $$
+            </div>
+        </div>
+
+        <div class="section-header" style="color: var(--pink); border-bottom-color: rgba(236, 72, 153, 0.3);">
+            <i class="fas fa-handshake"></i>
+            <h2>نظام تقييم كؤوس المواجهات المباشرة (Rabbaei Cup & H2H)</h2>
+        </div>
+        <p class="rule-text">البطولات التي تعتمد على المواجهات المباشرة لها نظام تقييم منفصل يعتمد على تجميع نقاط الفوز، والأداء في الأدوار الإقصائية.</p>
+
+        <div class="rule-card" style="border-right-color: var(--pink);">
+            <div class="rule-title"><span style="background: rgba(236, 72, 153, 0.1); color: var(--pink);">C1</span> نقاط المواجهات المباشرة (H2H Points)</div>
+            <div class="rule-text">يتم حساب النقاط التي حققها المدرب في مواجهات الدوري المباشرة (الفوز = 3 نقاط، التعادل = 1 نقطة).</div>
+        </div>
+        
+        <div class="rule-card" style="border-right-color: var(--pink);">
+            <div class="rule-title"><span style="background: rgba(236, 72, 153, 0.1); color: var(--pink);">C2</span> كفاءة الأدوار الإقصائية (Knockout Efficiency)</div>
+            <div class="rule-text">تقييم نقاط المدرب في مباريات نصف النهائي والنهائي ومقارنتها بأعلى نقاط مسجلة في الجولة لضمان عدالة التقييم في المراحل الحاسمة.</div>
+            <div class="math-box">
+                $$ \text{Efficiency} = \frac{\text{Manager Points in KO}}{\text{Max Global Points in KO}} $$
+            </div>
+        </div>
+
+        <div class="section-header" style="color: var(--green); border-bottom-color: rgba(16, 185, 129, 0.3);">
+            <i class="fas fa-globe"></i>
+            <h2>البطولات الأخرى (دوري الأبطال، كأس العالم، الخ)</h2>
+        </div>
+        <p class="rule-text">باقي البطولات التابعة للفيفا أو الويفا تُعامل بتقييم مبسط يرتكز على الأداء المباشر وكفاءة القرارات بدون تعقيدات الميزانية الخاصة بالدوري الإنجليزي.</p>
+
+        <div class="rule-card" style="border-right-color: var(--green);">
+            <div class="rule-title"><span style="background: rgba(16, 185, 129, 0.1); color: var(--green);">O1</span> المعايير الأساسية المطبقة</div>
+            <div class="rule-text">
+                يتم تقييم أداء المدرب في هذه البطولات بناءً على المعايير المشتركة التالية فقط:
+                <ul style="margin-top: 10px; line-height: 2;">
+                    <li><strong>M1:</strong> كفاءة اتخاذ القرار (التشكيلة والكابتن).</li>
+                    <li><strong>M2:</strong> إنجاز النقاط الإجمالي مقارنة بالأول عالمياً.</li>
+                    <li><strong>M3:</strong> نجاح الانتقالات التكتيكية.</li>
+                    <li><strong>M7:</strong> التصنيف العالمي الإجمالي للمدرب في البطولة.</li>
+                </ul>
             </div>
         </div>
 
