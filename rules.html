@@ -226,7 +226,7 @@
 
             <div class="rule-card">
                 <div class="rule-title"><span>M1</span> كفاءة اتخاذ القرار | Decision Efficiency</div>
-                <div class="rule-text">نسبة النقاط الصافية التي حققها المدرب فعلياً مقارنةً بالنقاط التي كان يمكن تحقيقها لو دخل بالجولة بالتشكيلة المثالية (بعد خصم قواطع السالب).</div>
+                <div class="rule-text">نسبة النقاط الصافية التي حققها المدرب فعلياً مقارنةً بالنقاط التي كان يمكن تحقيقها لو دخل بالجولة بالتشكيلة المثالية (بعد خصم السالب).</div>
                 <div class="math-box">
                     $$ M_1 = \frac{\sum_{i=1}^{N} (\text{Actual Pts}_{i} - \text{Hits}_{i})}{\sum_{i=1}^{N} (\text{Optimal Pts}_{i} - \text{Hits}_{i})} $$
                 </div>
@@ -242,7 +242,7 @@
 
             <div class="rule-card">
                 <div class="rule-title"><span>M3</span> نجاح الانتقالات | Transfers Efficiency</div>
-                <div class="rule-text">مقياس نجاح البيع والشراء؛ الأرباح (نقاط القادمين) مقابل الخسائر (نقاط المغادرين + تكلفة السالب) طوال فترة البطولة.</div>
+                <div class="rule-text">مقياس نجاح البيع والشراء؛ الأرباح (نقاط القادمين) مقابل الخسائر (نقاط المغادرين) + تكلفة السالب طوال فترة البطولة.</div>
                 <div class="math-box">
                     $$ M_3 = \frac{\sum \text{Profits}}{\sum \text{Profits} + \sum |\text{Losses}|} $$
                 </div>
@@ -291,7 +291,7 @@
                         <div class="chip-header green"><i class="fas fa-chair"></i> خواص الدكة (Bench Boost)</div>
                         <div class="chip-body">
                             <div class="rule-text" style="font-size: 0.85rem; margin:0;">يقيم جودة الدكة المُفعلة بالجولة مقارنةً بأعلى متوسط لنقاط الدكة حققه المدرب في تلك الفترة.</div>
-                            <div class="chip-formula">$$ \frac{\text{Actual Bench Pts}}{\text{Highest Bench Avg}} $$</div>
+                            <div class="chip-formula">$$ \frac{\text{Actual Bench Avg}}{\text{Highest Bench Avg}} $$</div>
                             
                             <div style="background: rgba(16, 185, 129, 0.08); border-right: 3px solid var(--green); padding: 12px; border-radius: 8px; margin-top: 10px;">
                                 <div style="font-size: 0.85rem; color: #6ee7b7; font-weight: bold; margin-bottom: 6px;"><i class="fas fa-calculator"></i> كيف يُحسب "متوسط الدكة"؟</div>
@@ -308,9 +308,9 @@
                     <div class="chip-card">
                         <div class="chip-header blue"><i class="fas fa-star-half-alt"></i> كابتن تلقائي (Maximum Captain)</div>
                         <div class="chip-body">
-                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">تقارن أداء اللاعبين الأساسيين بالجولة המُفعّلة، مع الجولة الأمثل في نفس الفترة.</div>
+                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">تقارن أداء اللاعبين الأساسيين بالجولة المفعلة، مع الجولة الأمثل في نفس الفترة.</div>
                             <div class="chip-formula">
-                                $$ \frac{\text{Actual Avg (Starters)}}{\text{Max Optimal Avg}} $$
+                                $$ \frac{\text{Actual Avg (Starters)}}{\text{Max Optimal Avg (Starters)}} $$
                             </div>
                             <div style="background: rgba(56, 189, 248, 0.08); border-right: 3px solid var(--accent-color); padding: 12px; border-radius: 8px; margin-top: 10px;">
                                 <div style="font-size: 0.85rem; color: var(--accent-color); font-weight: bold; margin-bottom: 6px;"><i class="fas fa-calculator"></i> توضيح للأساسيين:</div>
@@ -327,7 +327,7 @@
                         <div class="chip-body">
                             <div class="rule-text" style="font-size: 0.85rem; margin:0;">مدى نجاح اختيار اللاعب الإضافي مقارنة بأفضل خيار متاح لم يكن موجوداً في تشكيلة المدرب.</div>
                             <div class="chip-formula">
-                                $$ \frac{\text{12th Man Pts}}{\text{Max Pts (Not in Squad)}} $$
+                                $$ \frac{\text{12th Man Pts}}{\text{Max Pts (Not in Squad XI)}} $$
                             </div>
                         </div>
                     </div>
@@ -337,17 +337,17 @@
                         <div class="chip-body">
                             <div class="rule-text" style="font-size: 0.85rem; margin:0;">النقاط الصافية المستفادة مقارنة بأعلى استفادة ممكنة بالجولة الأمثل (بالمقارنة بين الأساسيين فقط).</div>
                             <div class="chip-formula">
-                                $$ \frac{\text{Actual Benefit}}{\text{Max Benefit (Starters)}} $$
+                                $$ \frac{\text{Actual Benefit (Starters)}}{\text{Max Benefit (Starters)}} $$
                             </div>
                         </div>
                     </div>
 
                     <div class="chip-card">
-                        <div class="chip-header red"><i class="fas fa-user-tie"></i> المدرب الأفضل (Best Mngr)</div>
+                        <div class="chip-header red"><i class="fas fa-user-tie"></i> المدرب الأفضل (Best Manager)</div>
                         <div class="chip-body">
-                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">خاصية مخصصة لاختيار مدرب فريق حقيقي. تُقاس بقسمة نقاطه في 3 جولات على أعلى نقاط ممكنة لمدرب متوفر في 3 جولات متتالية.</div>
+                            <div class="rule-text" style="font-size: 0.85rem; margin:0;">خاصية مخصصة لاختيار مدربي فرق حقيقيين ل 3 جولات متتالية. تُقاس بقسمة نقاط المدربين في ال3 جولات على أعلى نقاط ممكنة لمدربين في 3 جولات متتالية.</div>
                             <div class="chip-formula">
-                                $$ \frac{\text{Actual Mngr Pts (3 GWs)}}{\text{Max Pts (3 GWs)}} $$
+                                $$ \frac{\text{Actual Manager Pts (3 GWs)}}{\text{Max Pts (3 GWs)}} $$
                             </div>
                         </div>
                     </div>
@@ -376,7 +376,7 @@
 
             <div class="rule-card">
                 <div class="rule-title"><span>M7</span> التصنيف العالمي | Global Rank</div>
-                <div class="rule-text">درجة صريحة تعكس الترتيب النهائي للمدرب مقارنة بالعدد الكلي للمشاركين.</div>
+                <div class="rule-text">درجة صريحة تعكس الترتيب النهائي للمدرب مقارنة بالعدد الكلي للمشاركين بالعالم.</div>
                 <div class="math-box">
                     $$ M_7 = 1 - \left(\frac{\text{Manager Rank}}{\text{Total Participants}}\right) $$
                 </div>
@@ -387,7 +387,7 @@
             <div class="rule-card" style="border-right-color: var(--pink);">
                 <div class="rule-title" style="color:var(--pink)"><i class="fas fa-calendar-alt"></i> دوري الهيد تو هيد المستقل | H2H Score</div>
                 <div class="rule-text">
-                    بطولة مستقلة تمتد على مدار <strong>38 جولة</strong> للموسم. يرتكز التقييم على تجميع النقاط الكلاسيكي للمواجهات المباشرة، مقسوماً على أقصى نقاط ممكنة.
+                    بطولة مستقلة تمتد على مدار <strong>38 جولة</strong> للموسم. يرتكز التقييم على تجميع النقاط بنظام ال H2H للمواجهات المباشرة، مقسوماً على أقصى نقاط ممكنة.
                 </div>
                 <div class="math-box">
                     $$ \text{H2H Final Score} = \frac{(\text{Wins} \times 3) + (\text{Draws} \times 1)}{3 \times 38} $$
@@ -414,7 +414,7 @@
                     </div>
                     <div class="chip-body">
                         <div class="rule-text" style="font-size: 0.9rem; margin:0;">
-                            يُحسب بنظام المواجهات الكلاسيكية، مقسوماً على عدد الجولات المخصصة لفترة الدور الأول (مثلاً 6 جولات).
+                            يُحسب بنظام المواجهات ال H2H، مقسوماً على عدد الجولات المخصصة لفترة الدور الأول (مثلاً 28 جولة).
                         </div>
                         <div class="chip-formula" style="margin-top: auto;">
                             $$ \frac{(\text{Wins} \times 3) + (\text{Draws} \times 1)}{3 \times \text{Round 1 GWs}} $$
@@ -424,7 +424,7 @@
 
                 <div class="chip-card" style="border: 1px solid var(--accent-color); box-shadow: 0 5px 20px rgba(56, 189, 248, 0.15);">
                     <div class="chip-header" style="background: rgba(56, 189, 248, 0.1); border-bottom: 2px solid var(--accent-color); color: var(--accent-color);">
-                        <i class="fas fa-fire"></i> الأدوار الإقصائية (نصف ونهائي)
+                        <i class="fas fa-fire"></i> الأدوار الإقصائية (نصف النهائي و النهائي و مباراة تحديد المركز الثالث)
                     </div>
                     <div class="chip-body">
                         <div class="rule-text" style="font-size: 0.9rem; margin:0;">
