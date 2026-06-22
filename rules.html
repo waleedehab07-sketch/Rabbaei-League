@@ -247,7 +247,7 @@
                             <div class="chip-formula">$$ \frac{\text{Actual} - \text{Old Optimal}}{\text{World Max} - \text{Old Optimal}} $$</div>
                             <div style="font-size: 0.85rem; color:#ec4899; font-weight:bold; margin-top:10px;">في حال كانت الخاصية خاسرة (Actual &lt; Old):</div>
                             <div class="chip-formula">$$ \frac{\text{Actual} - \text{Old Optimal}}{\text{Old Optimal}} $$</div>
-                            <div class="edge-case"><strong>حالات خاصة:</strong> حالات خاصة: إذا كان مثالي التشكيلة القديمة (Optimal) أعلى من الأول على العالم، يكون التقييم -1. و إذا كانت نقاط التشكيلة الحالية أقل من مثالي التشكيلة القديمة و كانت سالبة يكون التقييم -1. التقييم يجب أن يكون في الفترة [-1,1]. </div>
+                            <div class="edge-case"><strong>حالات خاصة:</strong> إذا كان مثالي التشكيلة القديمة (Optimal) أعلى من الأول على العالم، يكون التقييم -1. و إذا كانت نقاط التشكيلة الحالية أقل من مثالي التشكيلة القديمة و كانت سالبة يكون التقييم -1. التقييم يجب أن يكون في الفترة [-1,1]. </div>
                         </div>
                     </div>
 
@@ -255,8 +255,8 @@
                         <div class="chip-header gold"><i class="fas fa-bolt"></i> المضاعفات (Triple Captain)</div>
                         <div class="chip-body">
                             <div class="rule-text" style="font-size: 0.85rem; margin:0;">تعتمد على كفاءة اختيار اللاعب لمضاعفة نقاطه مقارنة بالخيار الأمثل المتاح في تلك الفترة.</div>
-                            <div class="chip-formula" style="margin-top: auto;">$$ \frac{\text{Actual Captain} \times 3}{\text{Best Player in Phase} \times 3} $$</div>
-                            <div class="edge-case" style="border-right-color: var(--gold); background: rgba(251, 191, 36, 0.1); color: #fde68a;"><strong>اعتبار الفترات:</strong> يتم حساب اللاعب الأفضل بناءً على الفترة الزمنية، فإذا كان هناك كرتين بالموسم، يُقاس كل كرت بناءً على فترته المحددة حصراً.</div>
+                            <div class="chip-formula" style="margin-top: 10px;">$$ \frac{\text{Actual Captain} \times 3}{\text{Best Player in Phase} \times 3} $$</div>
+                            <div class="edge-case" style="border-right-color: var(--gold); background: rgba(251, 191, 36, 0.1); color: #fde68a; margin-top: auto;"><strong>اعتبار الفترات:</strong> يتم حساب اللاعب الأفضل بناءً على الفترة الزمنية، فإذا كان هناك كرتين بالموسم، يُقاس كل كرت بناءً على فترته المحددة حصراً.</div>
                         </div>
                     </div>
 
@@ -264,8 +264,17 @@
                         <div class="chip-header green"><i class="fas fa-chair"></i> خواص الدكة (Bench Boost)</div>
                         <div class="chip-body">
                             <div class="rule-text" style="font-size: 0.85rem; margin:0;">يقيم جودة الدكة المُفعلة بالجولة مقارنةً بأعلى متوسط لنقاط الدكة حققه المدرب في تلك الفترة.</div>
-                            <div class="chip-formula" style="margin-top: auto;">$$ \frac{\text{Actual Bench Points}}{\text{Highest Bench Average in Phase}} $$</div>
-                            <div class="edge-case" style="border-right-color: var(--green); background: rgba(16, 185, 129, 0.1); color: #6ee7b7;"><strong>توضيح رياضي:</strong> يتم حساب "متوسط نقاط الدكة" لكل تشكيلة (جولة) للمدرب في الفترة. الجولة التي تمتلك <u>أعلى متوسط دكة</u> تعتبر هي المقام الافتراضي.</div>
+                            <div class="chip-formula" style="margin-top: 10px; margin-bottom: 10px;">$$ \frac{\text{Actual Bench Points}}{\text{Highest Bench Average}} $$</div>
+                            
+                            <div style="background: rgba(16, 185, 129, 0.08); border-right: 3px solid var(--green); padding: 12px; border-radius: 8px; margin-top: auto;">
+                                <div style="font-size: 0.85rem; color: #6ee7b7; font-weight: bold; margin-bottom: 6px;"><i class="fas fa-calculator"></i> كيف يُحسب "متوسط الدكة" للتشكيلة؟</div>
+                                <div style="font-size: 0.8rem; color: #e2e8f0; margin-bottom: 8px; line-height: 1.6;">
+                                    يُحسب بجمع أعلى نقاط دكة ممكنة مع أقل نقاط دكة ممكنة للتشكيلة، وقسمة الناتج على 2. الجولة صاحبة <u>أعلى متوسط</u> في الفترة تُعتمد كمعيار أساسي (المقام).
+                                </div>
+                                <div class="chip-formula" style="font-size: 0.8rem; padding: 8px; border: 1px dashed rgba(16, 185, 129, 0.4); background: rgba(0,0,0,0.4);">
+                                    $$ \text{Average} = \frac{\text{Max Possible Bench} + \text{Min Possible Bench}}{2} $$
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
