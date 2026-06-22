@@ -9,23 +9,20 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
-        /* =========================================
-           تصميمك الأصلي (بدون أي مساس)
-           ========================================= */
         *, *::before, *::after { box-sizing: border-box; }
         
         :root {
             --bg-color: #0b0f19;
-            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-bg: rgba(15, 23, 42, 0.6);
             --glass-border: rgba(255, 255, 255, 0.08);
-            --hover-bg: rgba(255, 255, 255, 0.08);
             --accent-color: #38bdf8;
             --gold: #fbbf24;
+            --gold-glow: rgba(251, 191, 36, 0.4);
         }
 
         body {
             margin: 0; min-height: 100vh;
-            background: radial-gradient(circle at top right, #1a233a, var(--bg-color));
+            background: radial-gradient(circle at top right, #1e293b, var(--bg-color));
             font-family: 'Cairo', sans-serif; color: #e2e8f0;
             padding: 2rem;
             display: flex; justify-content: center; align-items: flex-start;
@@ -33,57 +30,58 @@
 
         .leaderboard-container {
             width: 100%; max-width: 1200px;
-            background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border); border-radius: 24px;
-            padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            padding: 2.5rem; box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8);
             min-height: 80vh; 
             display: flex; flex-direction: column;
         }
 
         .back-btn {
             align-self: flex-start;
-            background: rgba(56, 189, 248, 0.1); color: var(--accent-color);
+            background: linear-gradient(135deg, rgba(56,189,248,0.1), rgba(56,189,248,0.05));
+            color: var(--accent-color);
             padding: 8px 18px; border-radius: 12px; text-decoration: none; font-weight: 900;
-            transition: all 0.3s ease; margin-bottom: 2rem; border: 1px solid var(--accent-color);
+            transition: all 0.3s ease; margin-bottom: 2rem; border: 1px solid rgba(56, 189, 248, 0.3);
             display: flex; align-items: center; gap: 8px;
         }
-        .back-btn:hover { background: var(--accent-color); color: #0b0f19; transform: translateX(5px); }
+        .back-btn:hover { background: var(--accent-color); color: #0b0f19; transform: translateX(5px); box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
 
-        .header-title { color: var(--gold); font-weight: 900; font-size: 2rem; margin-bottom: 0.5rem; text-align: center; text-shadow: 0 0 15px rgba(251, 191, 36, 0.2); }
-        .header-subtitle { text-align: center; color: #94a3b8; font-size: 1.1rem; margin-bottom: 2rem; }
+        .header-title { color: #fff; font-weight: 900; font-size: 2.2rem; margin-bottom: 0.5rem; text-align: center; text-shadow: 0 0 20px rgba(255,255,255,0.1); }
+        .header-title span { color: var(--gold); text-shadow: 0 0 15px var(--gold-glow); }
+        .header-subtitle { text-align: center; color: #94a3b8; font-size: 1.1rem; margin-bottom: 2rem; font-weight: bold; letter-spacing: 0.5px; }
 
         #loading-msg {
             text-align: center; color: var(--accent-color); font-size: 1.3rem; font-weight: bold;
             margin: auto 0; padding: 2rem; animation: pulse 1.5s infinite alternate;
         }
-        @keyframes pulse { from { opacity: 0.5; } to { opacity: 1; text-shadow: 0 0 15px rgba(56, 189, 248, 0.5); } }
+        @keyframes pulse { from { opacity: 0.6; transform: scale(0.98); } to { opacity: 1; transform: scale(1); text-shadow: 0 0 15px rgba(56, 189, 248, 0.6); } }
 
         .filters-box { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 2rem; }
 
         .manager-checkbox-label {
             display: inline-flex; align-items: center; justify-content: center;
-            color: #94a3b8; font-size: 0.95rem; font-weight: bold;
-            background: rgba(0, 0, 0, 0.4); padding: 8px 18px; 
+            color: #cbd5e1; font-size: 0.95rem; font-weight: bold;
+            background: rgba(0, 0, 0, 0.5); padding: 8px 18px; 
             border-radius: 50px; cursor: pointer; transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1); user-select: none;
+            border: 1px solid var(--glass-border); user-select: none;
         }
-        .manager-checkbox-label:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+        .manager-checkbox-label:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
         .manager-checkbox-label:has(input:checked) {
-            background: rgba(56, 189, 248, 0.15); border-color: var(--accent-color); color: #fff;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(56, 189, 248, 0.05));
+            border-color: var(--accent-color); color: #fff;
             box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); transform: scale(1.05);
         }
         .manager-checkbox-label input[type="checkbox"] { display: none; }
 
         .canvas-container {
-            position: relative; height: 500px; width: 100%; flex-shrink: 0; /* منع الانضغاط */
-            background: rgba(0, 0, 0, 0.3); border-radius: 20px; padding: 1.5rem;
-            border: 1px solid var(--glass-border); box-shadow: inset 0 0 25px rgba(0,0,0,0.6);
+            position: relative; height: 500px; width: 100%; flex-shrink: 0; 
+            background: rgba(0, 0, 0, 0.4); border-radius: 20px; padding: 1.5rem;
+            border: 1px solid var(--glass-border); box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
             margin-bottom: 2rem;
         }
 
-        /* =========================================
-           🏁 تصميم سباق الأعمدة (التلفزيوني الفخم) 🏁
-           ========================================= */
+        /* 🏁 تنسيقات السباق التلفزيوني الفخم 🏁 */
         .tv-race-wrapper {
             background: rgba(0, 0, 0, 0.4); border-radius: 20px; border: 1px solid var(--glass-border);
             padding: 1.5rem; box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
@@ -104,23 +102,22 @@
         }
         .control-btn:hover { background: var(--accent-color); color: #0b0f19; box-shadow: 0 0 20px rgba(56, 189, 248, 0.5); transform: translateY(-2px); }
         
-        /* ساحة السباق الفخمة */
+        /* ساحة السباق */
         .race-track-area { 
             position: relative; width: 100%; min-height: 200px;
-            overflow: hidden; /* لمنع أي شيء يطلع برا */
         }
         
-        /* العلامة المائية (اسم البطولة بالخلفية) */
-        .watermark-text {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 4rem; font-weight: 900; color: rgba(255,255,255,0.04);
-            white-space: nowrap; pointer-events: none; text-transform: uppercase; z-index: 0;
-            text-align: center; width: 100%;
+        /* 🔧 التعديل: اسم البطولة أصبح عنوان بارز ومقروء في الأعلى */
+        .race-milestone-title {
+            font-size: 1.6rem; font-weight: 900; color: #fff;
+            text-align: right; margin-bottom: 2rem; 
+            text-shadow: 0 0 10px rgba(255,255,255,0.2);
+            border-bottom: 1px solid var(--glass-border); padding-bottom: 1rem;
+            display: block; width: 100%;
         }
 
         .race-bars-wrapper { position: relative; width: 100%; z-index: 1; transition: height 0.5s ease; }
         
-        /* الصف الواحد لكل مدرب (مفصول ومرتب) */
         .race-row {
             position: absolute; right: 0; width: 100%; height: 40px;
             display: flex; align-items: center; gap: 12px;
@@ -150,7 +147,7 @@
         }
 
         .race-score {
-            position: absolute; right: calc(100% + 10px); /* يطبع الرقم برّا العمود على اليسار عشان يبين دايماً */
+            position: absolute; right: calc(100% + 10px); 
             font-family: monospace; font-size: 16px; font-weight: 900; color: #fff;
             text-shadow: 1px 1px 4px #000; white-space: nowrap;
         }
@@ -160,7 +157,7 @@
             .leaderboard-container { padding: 1.5rem 1rem; border-radius: 16px; margin-top: 10px; }
             .canvas-container { height: 400px; padding: 0.8rem; }
             .race-header { flex-direction: column; align-items: flex-start; }
-            .watermark-text { font-size: 2rem; }
+            .race-milestone-title { font-size: 1.2rem; margin-bottom: 1.5rem; }
             .race-name { width: 90px; font-size: 13px; }
             .race-rank { width: 30px; height: 30px; font-size: 13px; }
         }
@@ -205,7 +202,7 @@
             </div>
             
             <div class="race-track-area">
-                <div id="race-watermark" class="watermark-text">جاري التجهيز...</div>
+                <div id="race-milestone-display" class="race-milestone-title">جاري التجهيز...</div>
                 <div id="race-bars" class="race-bars-wrapper"></div>
             </div>
         </div>
