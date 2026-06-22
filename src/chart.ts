@@ -276,7 +276,7 @@ function buildChart(managers: any[], results: any[]) {
   });
 
   // =========================================
-  // 🏁 محرك سباق الأعمدة المطور مع شارة الترتيب الفخمة 🏁
+  // 🏁 محرك سباق الأعمدة المطور الفخم (Broadcast Layout) 🏁
   // =========================================
   initRaceEngine(sortedManagers, managerScores, labels, hueStep);
 }
@@ -300,14 +300,16 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
         raceScores[id] = [0, ...(origManagerScores[id] || [])];
     });
 
-    const BAR_HEIGHT_SPACING = 55; // زيادة بسيطة عشان الشارة تاخذ مساحة مريحة
+    const ROW_HEIGHT_SPACING = 54; 
     let currentStep = 0;
     let raceTimeout: any;
     let isPlaying = false;
 
-    const barElements = new Map<string, HTMLDivElement>();
-    const barScoreElements = new Map<string, HTMLSpanElement>();
-    const barRankElements = new Map<string, HTMLSpanElement>();
+    // فصلت العناصر بالكامل عن بعض
+    const rowElements = new Map<string, HTMLDivElement>();
+    const barFillElements = new Map<string, HTMLDivElement>();
+    const scoreElements = new Map<string, HTMLSpanElement>();
+    const rankElements = new Map<string, HTMLSpanElement>();
     const currentDisplayScores = new Map<string, number>();
 
     function animateValue(obj: HTMLSpanElement, start: number, end: number, duration: number) {
@@ -327,40 +329,50 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
 
     sortedManagers.forEach(([id, data], index) => {
         const hue = Math.floor(index * hueStep * 2.5) % 360;
-        const color = `hsl(${hue}, 85%, 50%)`;
+        const color = `hsl(${hue}, 85%, 55%)`;
 
-        const bar = document.createElement('div');
-        bar.className = 'race-bar';
-        bar.style.backgroundColor = color;
-        bar.style.width = '14%'; 
-        bar.style.transform = `translateY(${(index * BAR_HEIGHT_SPACING) + 60}px)`; 
-        bar.style.opacity = '1';
+        // الصف كامل اللي بيتحرك فوق وتحت
+        const row = document.createElement('div');
+        row.className = 'race-row';
+        row.style.transform = `translateY(${index * ROW_HEIGHT_SPACING}px)`;
 
-        const detailsDiv = document.createElement('div');
-        detailsDiv.className = 'race-details';
-
+        // الترتيب
         const rankSpan = document.createElement('span');
         rankSpan.className = 'race-rank';
-        rankSpan.textContent = '-'; 
+        rankSpan.textContent = '-';
 
+        // الاسم
         const nameSpan = document.createElement('span');
         nameSpan.className = 'race-name';
         nameSpan.textContent = data.name;
 
-        detailsDiv.appendChild(rankSpan);
-        detailsDiv.appendChild(nameSpan);
+        // مسار العمود الملون والسكور
+        const barTrack = document.createElement('div');
+        barTrack.className = 'race-bar-track';
+
+        const barFill = document.createElement('div');
+        barFill.className = 'race-bar-fill';
+        barFill.style.backgroundColor = color;
+        barFill.style.width = '0%'; 
 
         const scoreSpan = document.createElement('span');
         scoreSpan.className = 'race-score';
         scoreSpan.textContent = '0.000';
+        scoreSpan.style.right = '0%'; // بيلحق نهاية العمود
 
-        bar.appendChild(detailsDiv);
-        bar.appendChild(scoreSpan);
-        raceBarsContainer.appendChild(bar);
+        barTrack.appendChild(barFill);
+        barTrack.appendChild(scoreSpan);
 
-        barElements.set(id, bar);
-        barScoreElements.set(id, scoreSpan);
-        barRankElements.set(id, rankSpan);
+        row.appendChild(rankSpan);
+        row.appendChild(nameSpan);
+        row.appendChild(barTrack);
+        
+        raceBarsContainer.appendChild(row);
+
+        rowElements.set(id, row);
+        barFillElements.set(id, barFill);
+        scoreElements.set(id, scoreSpan);
+        rankElements.set(id, rankSpan);
         currentDisplayScores.set(id, 0);
     });
 
@@ -377,46 +389,59 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
         const displayLimit = parseInt(limitSelect.value) || 999;
         const visibleCount = Math.min(stepScores.length, displayLimit);
         
-        raceBarsContainer.style.height = `${(visibleCount * BAR_HEIGHT_SPACING) + 120}px`; 
+        raceBarsContainer.style.height = `${(visibleCount * ROW_HEIGHT_SPACING) + 40}px`; 
 
         let maxScore = stepScores[0].score;
         if (maxScore === 0) maxScore = 1;
 
-        barElements.forEach(bar => {
-            bar.style.transition = `transform ${duration}ms linear, width ${duration}ms linear, opacity 0.5s ease`;
-        });
+        // تطبيق الانتقال الزمني لكل عنصر على حدة
+        rowElements.forEach(row => { row.style.transition = `transform ${duration}ms cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease`; });
+        barFillElements.forEach(bar => { bar.style.transition = `width ${duration}ms linear`; });
+        scoreElements.forEach(score => { score.style.transition = `right ${duration}ms linear`; });
 
         stepScores.forEach((item, rank) => {
-            const bar = barElements.get(item.id)!;
-            const scoreSpan = barScoreElements.get(item.id)!;
-            const rankSpan = barRankElements.get(item.id)!;
+            const row = rowElements.get(item.id)!;
+            const barFill = barFillElements.get(item.id)!;
+            const scoreSpan = scoreElements.get(item.id)!;
+            const rankSpan = rankElements.get(item.id)!;
             const oldScore = currentDisplayScores.get(item.id)!;
 
             if (rank < displayLimit) {
-                bar.style.opacity = '1';
-                bar.style.pointerEvents = 'auto';
+                row.style.opacity = '1';
+                row.style.pointerEvents = 'auto';
                 
-                let widthPercent = (item.score / maxScore) * 100;
-                if (widthPercent < 14) widthPercent = 14; 
-
-                bar.style.width = `${widthPercent}%`;
-                bar.style.transform = `translateY(${(rank * BAR_HEIGHT_SPACING) + 60}px)`; 
+                // التبديل العمودي (الترتيب) - زِدنا الـ z-index للي طالع فوق
+                row.style.transform = `translateY(${rank * ROW_HEIGHT_SPACING}px)`; 
+                row.style.zIndex = (100 - rank).toString();
                 
-                // تحديث رقم الترتيب
+                // تعديل عرض البار بناءً على أعلى نقطة (خلينا الحد الأقصى 85% عشان يظل السكور مقروء وما يلزق باليسار)
+                let widthPercent = (item.score / maxScore) * 85; 
+                barFill.style.width = `${widthPercent}%`;
+                scoreSpan.style.right = `${widthPercent}%`;
+                
                 rankSpan.textContent = (rank + 1).toString();
-                
-                // إضافة لون خاص للمركز الأول
                 if (rank === 0) {
                     rankSpan.style.background = 'var(--gold)';
                     rankSpan.style.color = '#000';
+                    rankSpan.style.borderColor = 'var(--gold)';
+                } else if (rank === 1) {
+                    rankSpan.style.background = '#e2e8f0'; // Silver
+                    rankSpan.style.color = '#000';
+                    rankSpan.style.borderColor = '#94a3b8';
+                } else if (rank === 2) {
+                    rankSpan.style.background = '#b45309'; // Bronze
+                    rankSpan.style.color = '#fff';
+                    rankSpan.style.borderColor = '#78350f';
                 } else {
-                    rankSpan.style.background = 'rgba(0, 0, 0, 0.4)';
+                    rankSpan.style.background = 'rgba(0, 0, 0, 0.6)';
                     rankSpan.style.color = 'var(--gold)';
+                    rankSpan.style.borderColor = 'var(--glass-border)';
                 }
 
             } else {
-                bar.style.opacity = '0';
-                bar.style.pointerEvents = 'none';
+                row.style.opacity = '0';
+                row.style.pointerEvents = 'none';
+                row.style.zIndex = '0';
             }
 
             animateValue(scoreSpan, oldScore, item.score, duration);
@@ -461,12 +486,11 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
         pauseRace();
         currentStep = 0;
         
-        barElements.forEach(bar => {
-            bar.style.transition = `transform 300ms ease, width 300ms ease, opacity 0.3s ease`;
-        });
-        currentDisplayScores.forEach((_, id) => {
-            currentDisplayScores.set(id, 0);
-        });
+        rowElements.forEach(row => { row.style.transition = `transform 300ms ease, opacity 0.3s ease`; });
+        barFillElements.forEach(bar => { bar.style.transition = `width 300ms ease`; });
+        scoreElements.forEach(score => { score.style.transition = `right 300ms ease`; });
+        
+        currentDisplayScores.forEach((_, id) => { currentDisplayScores.set(id, 0); });
         
         renderRaceStep(currentStep, 300);
         setTimeout(playRace, 400); 
