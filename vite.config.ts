@@ -7,6 +7,7 @@ export default defineConfig({
         main: 'index.html',
         chart: 'chart.html',
         profile: 'profile.html'
+        rules: 'rules.html'
       }
     }
   }
