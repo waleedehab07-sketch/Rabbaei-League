@@ -57,7 +57,6 @@
             text-align: center; color: #94a3b8; font-size: 1.05rem; margin-bottom: 2.5rem; line-height: 1.8;
         }
 
-        /* 👑 أزرار التنقل الذكية لمنع السكرول الطويل */
         .rules-tabs {
             display: flex; justify-content: center; gap: 10px; margin-bottom: 2.5rem; flex-wrap: wrap;
             background: rgba(0,0,0,0.3); padding: 8px; border-radius: 16px; border: 1px solid var(--glass-border);
@@ -77,7 +76,6 @@
         .tab-content.active { display: block; animation: fadeIn 0.4s ease-in-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* كروت المعايير */
         .rule-card {
             background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-border);
             border-radius: 16px; padding: 1.5rem 2rem; margin-bottom: 1.5rem;
@@ -93,6 +91,10 @@
             overflow-x: auto; margin-top: 1rem; font-size: 1.1rem;
         }
 
+        .math-caption {
+            text-align: center; color: #94a3b8; font-size: 0.9rem; margin-top: 8px; font-family: monospace;
+        }
+
         .bullet-list { margin-top: 10px; padding-right: 20px; line-height: 1.8; color: #cbd5e1; }
         .bullet-list li strong { color: var(--accent-color); }
 
@@ -101,7 +103,7 @@
             .container { padding: 1.5rem 1rem; border-radius: 16px; }
             .page-title { font-size: 1.6rem; }
             .rules-tabs { display: grid; grid-template-columns: repeat(2, 1fr); width: 100%; }
-            .tab-btn { width: 100%; justify-content: center; font-size: 0.9rem; padding: 8px; }
+            .tab-btn { width: 100%; justify-content: center; font-size: 0.85rem; padding: 8px; text-align: center;}
         }
     </style>
 </head>
@@ -115,9 +117,9 @@
 
         <div class="rules-tabs">
             <button class="tab-btn active" onclick="switchTab(event, 'general-tab')"><i class="fas fa-calculator"></i> التقييم العام والتشكيلة</button>
-            <button class="tab-btn" onclick="switchTab(event, 'epl-tab')"><i class="fas fa-futbol"></i> الدوري الإنجليزي FPL</button>
+            <button class="tab-btn" onclick="switchTab(event, 'classic-tab')"><i class="fas fa-globe"></i> البطولات الكلاسيكية العامة</button>
             <button class="tab-btn" onclick="switchTab(event, 'h2h-tab')"><i class="fas fa-shield-alt"></i> دوري المواجهات H2H</button>
-            <button class="tab-btn" onclick="switchTab(event, 'cup-tab')"><i class="fas fa-trophy"></i> كأس رباعي والبطولات</button>
+            <button class="tab-btn" onclick="switchTab(event, 'cup-tab')"><i class="fas fa-trophy"></i> كأس رباعي الإقصائي</button>
         </div>
 
         <div id="general-tab" class="tab-content active">
@@ -147,28 +149,29 @@
             </div>
         </div>
 
-        <div id="epl-tab" class="tab-content">
-            <p class="rule-text" style="margin-bottom:1.5rem;"><i class="fas fa-info-circle" style="color:var(--accent-color)"></i> يتم تحليل وحساب أداء المدرب في الفانتزي الإنجليزي المكون من 38 جولة بناءً على المعايير الصارمة التالية:</p>
+        <div id="classic-tab" class="tab-content">
+            <p class="rule-text" style="margin-bottom:1.5rem;"><i class="fas fa-info-circle" style="color:var(--accent-color)"></i> هذا النظام يُطبق على <strong>كافة البطولات الكلاسيكية</strong> المعتمدة على تجميع النقاط (مثل: الدوري الإنجليزي، دوري الأبطال، كأس العالم، واليورو). يتم ضبط المعادلات ديناميكياً بناءً على عدد جولات البطولة المحددة.</p>
 
             <div class="rule-card">
                 <div class="rule-title"><span>M1</span> كفاءة اتخاذ القرار | Decision Efficiency</div>
                 <div class="rule-text">نسبة النقاط الصافية التي حققها المدرب فعلياً مقارنةً بالنقاط التي كان يمكن تحقيقها لو دخل بالجولة بالتشكيلة المثالية (بعد خصم قواطع السالب).</div>
                 <div class="math-box">
-                    $$ M_1 = \frac{\sum_{gw=1}^{38} (\text{Actual Points}_{gw} - \text{Hits}_{gw})}{\sum_{gw=1}^{38} (\text{Optimal Points}_{gw} - \text{Hits}_{gw})} $$
+                    $$ M_1 = \frac{\sum_{gw=1}^{N} (\text{Actual Points}_{gw} - \text{Hits}_{gw})}{\sum_{gw=1}^{N} (\text{Optimal Points}_{gw} - \text{Hits}_{gw})} $$
                 </div>
+                <div class="math-caption">حيث المتغير \( N \) يُمثل إجمالي عدد جولات البطولة.</div>
             </div>
 
             <div class="rule-card">
                 <div class="rule-title"><span>M2</span> إنجاز النقاط | Points Achievement</div>
-                <div class="rule-text">معدل الفجوة بين نقاط المدرب الإجمالية ونقاط المتصدر رقم 1 على مستوى العالم.</div>
+                <div class="rule-text">معدل الفجوة بين نقاط المدرب الإجمالية ونقاط المتصدر رقم 1 على مستوى العالم لتلك البطولة.</div>
                 <div class="math-box">
-                    $$ M_2 = \frac{\text{Manager Total Points}}{\text{World Rank #1 Points}} $$
+                    $$ M_2 = \frac{\text{Manager Total Points}}{\text{Tournament World Rank #1 Points}} $$
                 </div>
             </div>
 
             <div class="rule-card">
                 <div class="rule-title"><span>M3</span> نجاح الانتقالات | Transfers Efficiency</div>
-                <div class="rule-text">مقياس نجاح البيع والشراء؛ الأرباح (نقاط القادمين) مقابل الخسائر (نقاط المغادرين + تكلفة السالب).</div>
+                <div class="rule-text">مقياس نجاح البيع والشراء؛ الأرباح (نقاط القادمين) مقابل الخسائر (نقاط المغادرين + تكلفة السالب) طوال فترة البطولة.</div>
                 <div class="math-box">
                     $$ M_3 = \frac{\sum \text{Transfer Profits}}{\sum \text{Transfer Profits} + \sum |\text{Transfer Losses}|} $$
                 </div>
@@ -176,29 +179,29 @@
 
             <div class="rule-card">
                 <div class="rule-title"><span>M4</span> الاستمرارية | Consistency (Phase Rating)</div>
-                <div class="rule-text">يقيس استمرارية المدرب في المنافسة وصدارة الفترات الزمنية (Phases) المختلفة للدوري طوال الموسم.</div>
+                <div class="rule-text">يقيس استمرارية المدرب في المنافسة وصدارة الفترات الزمنية أو الجولات (Phases/Matchdays) للبطولة.</div>
                 <div class="math-box">
-                    $$ M_4 = \frac{\text{Phases Won (Rank 1)}}{\text{Total Season Phases}} $$
+                    $$ M_4 = \frac{\text{Phases Won (Rank 1)}}{\text{Total Tournament Phases (N)}} $$
                 </div>
             </div>
 
             <div class="rule-card">
                 <div class="rule-title"><span>M5</span> كفاءة استخدام الخواص | Chips Average Engine</div>
                 <div class="rule-text">
-                    يتم تقييم كل خاصية تم تفعيلها بشكل مستقل خطي (Linear) تماماً كما يظهر في الفيديو:
+                    يتم تقييم كل خاصية تم تفعيلها بشكل مستقل خطي (Linear):
                     <br>• <strong>الوايلد كارد (WC) / الفري هت (FH) / الليميتليس (LL):</strong>
-                    <br> - <u>في حال الربح (الصافي موجبة):</u> (النقاط الفعلية - مثالي التشكيلة القديمة) تقسيم (الأول على العالم - مثالي التشكيلة القديمة).
+                    <br> - <u>في حال الربح (الصافي موجبة):</u> (النقاط الفعلية - مثالي التشكيلة القديمة) تقسيم (الأول على العالم بالجولة - مثالي التشكيلة القديمة).
                     <br> - <u>في حال الخسارة (الصافي سالبة):</u> (النقاط الفعلية - مثالي التشكيلة القديمة) تقسيم (مثالي التشكيلة القديمة).
-                    <br> - <u>حالة خاصة:</u> إذا كان مثالي التشكيلة القديمة أعلى من الأول على العالم، يتم معالجة المقام لضمان الاستقرار الرياضي. وإذا كانت النقاط الفعلية أقل من أو تساوي 0، يتم تثبيت التقييم تلقائياً عند -1.0 لمنع التشوهات الحسابية.
+                    <br> - <u>حالة خاصة:</u> يتم التثبيت عند -1.0 كحد أدنى لمنع التشوهات الحسابية إذا كانت النقاط الفعلية صفراً أو بالسالب.
                     <br>• <strong>التربل كابتن (TC):</strong> نقاط الكابتن الفعلي مضروبة في 3 تقسيم (أعلى نقاط لاعب متاح بالفترة مضروبة في 3).
-                    <br>• <strong>البنش بوست (BB):</strong> تقييم نقاط الدكة في جولة التفعيل ومقارنتها بأفضل وأقصى جولة ممكنة لدكة مأخوذة كمتوسط لتلك الفترة.
-                    <br>📝 <strong>آلية الاحتساب النهائي:</strong> يتم أخذ متوسط (Average) التقييمات لكل خاصية على حدة (مع مراعاة تقسيم الفترات لو تم استخدام خاصيتين مثل الوايلد كارد بمصفين مختلفين)، ثم يتم حساب <u>متوسط المتوسطات الأربعة (Average of Averages)</u> لتمثيل درجة المعيار الكلي.
+                    <br>• <strong>البنش بوست (BB):</strong> تقييم نقاط الدكة في جولة التفعيل ومقارنتها بمتوسط أفضل دكة ممكنة لتلك الفترة.
+                    <br>📝 <strong>آلية الاحتساب النهائي:</strong> يُحسب متوسط الاستفادة لكل نوع من الخواص أولاً، ثم يؤخذ <u>متوسط المتوسطات (Average of Averages)</u>، مع احتساب الخاصية المفقودة أو غير المستخدمة كـ (0.000).
                 </div>
             </div>
 
             <div class="rule-card" style="border-right-color: var(--purple);">
                 <div class="rule-title"><span style="background:rgba(168,85,247,0.1); color:var(--purple);">M6</span> القيمة المالية للتشكيلة | Squad Value</div>
-                <div class="rule-text">⚠️ <strong>خاص بالدوري الإنجليزي (FPL) فقط:</strong> يقيس كفاءة المدرب الاقتصادية في تنمية الميزانية المالية الإجمالية لفريقه.</div>
+                <div class="rule-text">⚠️ <strong>(يُطبق على الدوري الإنجليزي FPL فـقـط):</strong> يقيس كفاءة المدرب الاقتصادية في تنمية الميزانية المالية الإجمالية لفريقه بنهاية الموسم.</div>
                 <div class="math-box">
                     $$ M_6 = \min\left(1.0, \frac{\text{Manager Final Value} - 100}{\text{Global Max Value} - 100}\right) $$
                 </div>
@@ -206,7 +209,7 @@
 
             <div class="rule-card">
                 <div class="rule-title"><span>M7</span> التصنيف العالمي المعكوس | Global Rank Inverse</div>
-                <div class="rule-text">معدل ترتيب المدرب النهائي مقارنة بالعدد الكلي لمدربي العالم.</div>
+                <div class="rule-text">معدل ترتيب المدرب النهائي مقارنة بالعدد الكلي لمدربي العالم المشاركين بالبطولة.</div>
                 <div class="math-box">
                     $$ M_7 = \max\left(0, 1 - \frac{\text{Manager Global Rank}}{\text{Total Global Managers}}\right) $$
                 </div>
@@ -244,7 +247,7 @@
             </div>
 
             <div class="rule-card">
-                <div class="rule-title"><i class="fas fa-layer-group"></i> تفصيل حساب أدوار كأس رباعي</div>
+                <div class="rule-title"><i class="fas fa-layer-group"></i> تفصيل حساب أدوار الكأس</div>
                 <div class="rule-text">
                     • <strong>الدور الأول (المجموعات):</strong> يُحسب تماماً بنظام الـ H2H (3 نقاط للفوز، نقطة للتعادل) ولكن محصوراً <u>فقط على عدد جولات الدور الأول المحددة في الأرشيف</u>.
                     <br><br>
@@ -257,42 +260,26 @@
                     حيث يتم حساب <strong>"أقصى عدد نقاط ممكن في فترة الدور"</strong> عن طريق جمع أعلى نقاط جولة حقيقية تم تسجيلها على مستوى اللعبة عالمياً (Global Highest Score) <u>فقط وحصرياً خلال التواريخ والجولات التابعة لفترة هذا الدور</u>، مما يضمن عدالة التقييم ومواكبة أحداث الجولة الواقعية.
                 </div>
             </div>
-
-            <div class="rule-card" style="border-right-color: #94a3b8;">
-                <div class="rule-title" style="color:#94a3b8;"><i class="fas fa-globe-europe"></i> البطولات الأخرى (دوري الأبطال، كأس العالم، إلخ)</div>
-                <div class="rule-text">
-                    البطولات الدولية التابعة للويفا أو الفيفا تُعامل وفق تقييم تكتيكي مبسط يركز على الكفاءة المباشرة والأداء دون حسابات الميزانيات المالية المعقدة، ويرتكز التقييم النهائي لها على المعايير المدمجة التالية فقط:
-                    <ul class="bullet-list">
-                        <li><strong>M1:</strong> كفاءة اتخاذ القرار التكتيكي (التشكيلة والكابتن الفعلي مقابل المثالي).</li>
-                        <li><strong>M2:</strong> إنجاز النقاط التراكمي الإجمالي مقارنة بالمتصدر العالمي للبطولة.</li>
-                        <li><strong>M3:</strong> نجاح صفقات الانتقالات التكتيكية الصافية.</li>
-                        <li><strong>M7:</strong> التصنيف العالمي الإجمالي للمدرب في نهاية البطولة.</li>
-                    </ul>
-                </div>
-            </div>
         </div>
 
     </div>
 
     <script>
         function switchTab(evt, tabId) {
-            // إخفاء كل المحتويات
             const tabContents = document.getElementsByClassName("tab-content");
             for (let i = 0; i < tabContents.length; i++) {
                 tabContents[i].classList.remove("active");
             }
 
-            // إلغاء تفعيل كل الأزرار
             const tabButtons = document.getElementsByClassName("tab-btn");
             for (let i = 0; i < tabButtons.length; i++) {
                 tabButtons[i].classList.remove("active");
             }
 
-            // إظهار التبويب الحالي وتفعيل الزر المضغوط
             document.getElementById(tabId).classList.add("active");
             evt.currentTarget.classList.add("active");
             
-            // إعادة معالجة المعادلات الرياضية لـ MathJax لضمان ظهورها فوراً عند التبديل
+            // إعادة تفعيل MathJax لرسم المعادلات بعد التبديل
             if (window.MathJax) {
                 MathJax.typesetPromise();
             }
