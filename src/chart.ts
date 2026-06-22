@@ -1,6 +1,5 @@
 const AIRTABLE_BASE_ID = 'appyj28JrILxWr0Qy';
-const AIRTABLE_TOKEN =
-  'pat7CEru8NzGmfpCv.6d4c230697996999ba3e8f7952c3c5baf9fbcedf557397bde357179db86bd303';
+const AIRTABLE_TOKEN = 'pat7CEru8NzGmfpCv.6d4c230697996999ba3e8f7952c3c5baf9fbcedf557397bde357179db86bd303';
 const MANAGERS_TABLE = 'tblm7fEWUMG15MbCU';
 const RESULTS_TABLE = 'tblbjo6Dg8BTseU0D';
 
@@ -70,6 +69,7 @@ function buildChart(managers: any[], results: any[]) {
   const ChartJS = (window as any).Chart;
   if (!ChartJS) return;
 
+  // الترتيب الزمني الصارم المعتمد
   const milestoneOrder = [
     '2018 World Cup',
     '2018/2019 Premier League',
@@ -277,7 +277,7 @@ function buildChart(managers: any[], results: any[]) {
   });
 
   // =========================================
-  // 🏁 محرك سباق الأعمدة المطور (انطلاق من الصفر المطلق) 🏁
+  // 🏁 محرك سباق الأعمدة المطور (انطلاق من الصفر) 🏁
   // =========================================
   initRaceEngine(sortedManagers, managerScores, labels, hueStep);
 }
@@ -294,8 +294,8 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
 
     if (!raceBarsContainer || !milestoneDisplay || !playBtn || !pauseBtn || !replayBtn || !speedSelect || !limitSelect) return;
 
-    // 🔧 بناء مصفوفات "محرك السباق" لتبدأ من الصفر تماماً
-    const raceLabels = ['بداية التحدي', ...origLabels];
+    // بناء الهيكل التراكمي للبدء من الصفر المطلق في الجولة 0
+    const raceLabels = ['بداية التحدي 🏁', ...origLabels];
     const raceScores: { [id: string]: number[] } = {};
     
     sortedManagers.forEach(([id, data]) => {
@@ -311,7 +311,7 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
     const barScoreElements = new Map<string, HTMLSpanElement>();
     const currentDisplayScores = new Map<string, number>();
 
-    // 🔧 دالة لعمل (Counter) للأرقام بنعومة
+    // عداد تصاعدي ذكي للأرقام الماتش داي بنعومة الـ Frames
     function animateValue(obj: HTMLSpanElement, start: number, end: number, duration: number) {
         let startTimestamp: number | null = null;
         const step = (timestamp: number) => {
@@ -327,7 +327,7 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
         window.requestAnimationFrame(step);
     }
 
-    // تهيئة الأعمدة لكل مدرب
+    // بناء وتوليد عناصر الـ HTML للأعمدة
     sortedManagers.forEach(([id, data], index) => {
         const hue = Math.floor(index * hueStep * 2.5) % 360;
         const color = `hsl(${hue}, 85%, 55%)`;
@@ -335,7 +335,7 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
         const bar = document.createElement('div');
         bar.className = 'race-bar';
         bar.style.backgroundColor = color;
-        bar.style.width = '12%'; // مساحة افتراضية صغيرة لاحتواء الاسم عند الصفر
+        bar.style.width = '12%'; 
         bar.style.transform = `translateY(${(index * BAR_HEIGHT_SPACING) + 60}px)`; 
         bar.style.opacity = '1';
 
@@ -368,7 +368,9 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
 
         const displayLimit = parseInt(limitSelect.value) || 999;
         const visibleCount = Math.min(stepScores.length, displayLimit);
-        raceBarsContainer.style.height = `${(visibleCount * BAR_HEIGHT_SPACING) + 60}px`; 
+        
+        // حماية مساحة التنفس السفلية لمنع الاختفاء
+        raceBarsContainer.style.height = `${(visibleCount * BAR_HEIGHT_SPACING) + 100}px`; 
 
         let maxScore = stepScores[0].score;
         if (maxScore === 0) maxScore = 1;
@@ -387,7 +389,6 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
                 bar.style.pointerEvents = 'auto';
                 
                 let widthPercent = (item.score / maxScore) * 100;
-                // احتواء الاسم عند الانطلاق من الصفر
                 if (widthPercent < 12) widthPercent = 12; 
 
                 bar.style.width = `${widthPercent}%`;
@@ -411,7 +412,7 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
             return;
         }
 
-        let currentDuration = parseInt(speedSelect.value) || 1000;
+        let currentDuration = parseInt(speedSelect.value) || 2000; 
         
         renderRaceStep(currentStep, currentDuration); 
         
@@ -456,7 +457,7 @@ function initRaceEngine(sortedManagers: any[], origManagerScores: any, origLabel
 
     limitSelect.addEventListener('change', () => { if (!isPlaying) renderRaceStep(Math.max(0, currentStep - 1), 300); });
     
-    // 🏁 نقطة الصفر الفعلية فور التحميل
+    // نقطة الصفر الفورية للاستعداد
     setTimeout(() => renderRaceStep(0, 0), 100);
 }
 
