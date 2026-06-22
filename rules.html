@@ -123,6 +123,8 @@
         .chip-formula {
             background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; text-align: center;
             color: var(--gold); font-family: monospace; font-size: 1rem; border: 1px dashed rgba(255,255,255,0.1);
+            max-width: 100%; overflow-x: auto; /* 🛡️ الحل الجذري لمنع المعادلة من الخروج عن الصندوق */
+            scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.2) transparent;
         }
         .edge-case {
             background: rgba(239, 68, 68, 0.1); border-right: 3px solid var(--red); padding: 10px; border-radius: 8px;
@@ -264,7 +266,7 @@
                         <div class="chip-header green"><i class="fas fa-chair"></i> خواص الدكة (Bench Boost)</div>
                         <div class="chip-body">
                             <div class="rule-text" style="font-size: 0.85rem; margin:0;">يقيم جودة الدكة المُفعلة بالجولة مقارنةً بأعلى متوسط لنقاط الدكة حققه المدرب في تلك الفترة.</div>
-                            <div class="chip-formula" style="margin-top: 10px; margin-bottom: 10px;">$$ \frac{\text{Actual Bench Points}}{\text{Highest Bench Average}} $$</div>
+                            <div class="chip-formula" style="margin-top: 10px; margin-bottom: 10px;">$$ \frac{\text{Actual Bench Average}}{\text{Highest Bench Average}} $$</div>
                             
                             <div style="background: rgba(16, 185, 129, 0.08); border-right: 3px solid var(--green); padding: 12px; border-radius: 8px; margin-top: auto;">
                                 <div style="font-size: 0.85rem; color: #6ee7b7; font-weight: bold; margin-bottom: 6px;"><i class="fas fa-calculator"></i> كيف يُحسب "متوسط الدكة" للتشكيلة؟</div>
@@ -272,7 +274,7 @@
                                     يُحسب بجمع أعلى نقاط دكة ممكنة مع أقل نقاط دكة ممكنة للتشكيلة، وقسمة الناتج على 2. الجولة صاحبة <u>أعلى متوسط</u> في الفترة تُعتمد كمعيار أساسي (المقام).
                                 </div>
                                 <div class="chip-formula" style="font-size: 0.8rem; padding: 8px; border: 1px dashed rgba(16, 185, 129, 0.4); background: rgba(0,0,0,0.4);">
-                                    $$ \text{Average} = \frac{\text{Max Possible Bench} + \text{Min Possible Bench}}{2} $$
+                                    $$ \text{Avg} = \frac{\text{Max Bench} + \text{Min Bench}}{2} $$
                                 </div>
                             </div>
                         </div>
