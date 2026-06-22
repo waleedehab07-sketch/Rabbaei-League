@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قواعد ومعايير التقييم | دوري رباعي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent-color: #38bdf8;
+            --gold: #fbbf24;
+        }
+
+        body {
+            margin: 0; min-height: 100vh;
+            background: radial-gradient(circle at top right, #1a233a, var(--bg-color));
+            font-family: 'Cairo', sans-serif; color: #e2e8f0;
+            display: flex; justify-content: center; padding: 2rem;
+        }
+
+        .container {
+            width: 100%; max-width: 1000px;
+            background: var(--glass-bg); backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border); border-radius: 24px;
+            padding: 3rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+        }
+
+        .back-btn {
+            display: inline-block; margin-bottom: 2rem;
+            color: var(--accent-color); text-decoration: none; font-weight: 700;
+            border: 1px solid rgba(56, 189, 248, 0.3); padding: 8px 18px; border-radius: 12px;
+            background: rgba(56, 189, 248, 0.1); transition: 0.3s;
+        }
+        .back-btn:hover { background: var(--accent-color); color: #0b0f19; transform: translateX(5px); }
+
+        .page-title {
+            text-align: center; color: var(--gold); font-size: 2.2rem; font-weight: 900;
+            margin-bottom: 0.5rem; text-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
+        }
+        .page-desc {
+            text-align: center; color: #94a3b8; font-size: 1.1rem; margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        .rule-card {
+            background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-border);
+            border-radius: 16px; padding: 1.5rem 2rem; margin-bottom: 1.5rem;
+            border-right: 4px solid var(--accent-color);
+            transition: transform 0.3s ease;
+        }
+        .rule-card:hover { transform: translateY(-3px); border-color: rgba(56, 189, 248, 0.3); }
+
+        .rule-title {
+            display: flex; align-items: center; gap: 10px;
+            color: #fff; font-size: 1.4rem; font-weight: 900; margin-bottom: 1rem;
+        }
+        .rule-title span { color: var(--accent-color); font-family: monospace; font-size: 1.1rem; background: rgba(56, 189, 248, 0.1); padding: 2px 8px; border-radius: 6px;}
+        
+        .rule-text { color: #cbd5e1; font-size: 1rem; line-height: 1.8; margin-bottom: 1.5rem; }
+
+        .math-box {
+            background: rgba(255, 255, 255, 0.02); border: 1px dashed rgba(255, 255, 255, 0.1);
+            padding: 1.5rem; border-radius: 12px; text-align: center; color: var(--gold);
+            overflow-x: auto;
+        }
+
+        .weight-badge {
+            display: inline-block; margin-top: 1rem; font-size: 0.9rem; font-weight: bold;
+            color: #10b981; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 0.5rem; }
+            .container { padding: 1.5rem; border-radius: 16px; }
+            .page-title { font-size: 1.8rem; }
+            .rule-card { padding: 1.2rem; }
+            .rule-title { font-size: 1.2rem; }
+            .math-box { font-size: 0.9rem; padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="/" class="back-btn"><i class="fas fa-arrow-right"></i> العودة للرئيسية</a>
+        
+        <h1 class="page-title"><i class="fas fa-balance-scale"></i> الدليل الرسمي لتقييم المدربين</h1>
+        <p class="page-desc">
+            لضمان أعلى معايير الشفافية والمصداقية في "دوري رباعي"، نضع بين أيديكم القواعد والمعادلات الرياضية المُعتمدة برمجياً لحساب نقاط جائزة "أفضل مدرب". يتم الحساب بناءً على الخوارزمية التالية:
+        </p>
+
+        <div class="rule-card">
+            <div class="rule-title"><span>M1</span> كفاءة اتخاذ القرار (Decision Efficiency)</div>
+            <div class="rule-text">
+                يقيس هذا المعيار مدى دقة المدرب في اختيار التشكيلة الأساسية والكابتن من بين جميع اللاعبين المتاحين في فريقه، مقارنةً بالنقاط "المثالية" التي كان من الممكن تحقيقها لو اختار التشكيلة الأفضل في تلك الجولة (بعد خصم نقاط السالب).
+            </div>
+            <div class="math-box">
+                $$ M_1 = \frac{\sum_{gw=1}^{N} (\text{Actual Points}_{gw} - \text{Hits}_{gw})}{\sum_{gw=1}^{N} (\text{Optimal Max Points}_{gw} - \text{Hits}_{gw})} $$
+            </div>
+        </div>
+
+        <div class="rule-card">
+            <div class="rule-title"><span>M3</span> إنجاز النقاط (Points Achievement)</div>
+            <div class="rule-text">
+                يقارن الأداء الإجمالي للمدرب في نهاية الموسم بأداء المصنف "رقم 1 عالمياً" في اللعبة، لتحديد مدى قرب المدرب من القمة العالمية.
+            </div>
+            <div class="math-box">
+                $$ M_3 = \frac{\text{Manager Total Points}}{\text{World Rank #1 Points}} $$
+            </div>
+        </div>
+
+        <div class="rule-card">
+            <div class="rule-title"><span>M4</span> نجاح الانتقالات (Transfers Efficiency)</div>
+            <div class="rule-text">
+                يعتمد هذا المعيار على تحليل صفقات البيع والشراء التي أجراها المدرب خلال الموسم. يحسب إجمالي "الأرباح" (النقاط التي جلبها اللاعبون الجدد) مقابل "الخسائر" (النقاط التي حققها اللاعبون المباعون + تكلفة الخصم).
+            </div>
+            <div class="math-box">
+                $$ M_4 = \frac{\sum \text{Transfer Profits}}{\sum \text{Transfer Profits} + \sum |\text{Transfer Losses}|} $$
+            </div>
+        </div>
+
+        <div class="rule-card">
+            <div class="rule-title"><span>M5</span> مدرب الشهر (Manager of the Month)</div>
+            <div class="rule-text">
+                يقيس قدرة المدرب على السيطرة وتصدر الأشهر (Phases) خلال الموسم مقارنةً بباقي مدربي الدوري.
+            </div>
+            <div class="math-box">
+                $$ M_5 = \frac{\text{Months Won (Rank 1)}}{\text{Total Completed Months}} $$
+            </div>
+        </div>
+
+        <div class="rule-card">
+            <div class="rule-title"><span>M6</span> كفاءة استخدام الخواص (Chips Efficiency)</div>
+            <div class="rule-text">
+                تحليل رياضي لمدى استفادة المدرب من الخواص المتاحة (Wildcard, Free Hit, Bench Boost, Triple Captain). يتم حساب الاستفادة الصافية لكل خاصية مقارنةً بما كان سيحققه فريقه القديم.
+            </div>
+            <div class="math-box">
+                $$ M_6 = \frac{1}{4} \sum \left( \frac{\text{Chip Net Benefit}}{\text{Maximum Possible Benefit in GW}} \right) $$
+            </div>
+            <div style="text-align: center; color: #64748b; font-size: 0.85rem; margin-top: 10px;">
+                * المفقود من الخواص أو غير المستخدم يُحسب كـ صفر (0.000) في المتوسط العام.
+            </div>
+        </div>
+
+        <div class="rule-card" style="border-right-color: #10b981;">
+            <div class="rule-title"><span style="background: rgba(16, 185, 129, 0.1); color: #10b981;">M7</span> القيمة المالية للفريق (Squad Value)</div>
+            <div class="rule-text">
+                معيار خاص بالدوري الإنجليزي (FPL) فقط. يقيس قدرة المدرب على تنمية ميزانية فريقه خلال الموسم.
+            </div>
+            <div class="math-box">
+                $$ M_7 = \min\left(1.0, \frac{\text{Manager Final Value} - 100}{\text{Global Max Value} - 100}\right) $$
+            </div>
+        </div>
+
+        <div class="rule-card" style="border-right-color: #10b981;">
+            <div class="rule-title"><span style="background: rgba(16, 185, 129, 0.1); color: #10b981;">M8</span> التصنيف العالمي (Global Rank Inverse)</div>
+            <div class="rule-text">
+                الترتيب المعكوس للمدرب على مستوى العالم، بحيث كلما اقترب المدرب من المركز الأول، اقتربت نتيجة المعادلة من 1.0 (الدرجة الكاملة).
+            </div>
+            <div class="math-box">
+                $$ M_8 = \max\left(0, 1 - \frac{\text{Manager Global Rank}}{\text{Total Global Managers}}\right) $$
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
